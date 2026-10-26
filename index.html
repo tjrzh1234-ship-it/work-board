@@ -283,6 +283,54 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .iq-btns{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
 .iq-btns .nt-msg{margin-right:auto}
 @media (max-width:640px){.iq-row{grid-template-columns:1fr auto}.iq-row .iq-kind{display:none}}
+/* 메신저 */
+.chat{display:grid;grid-template-columns:18rem 1fr;height:calc(100vh - 15rem);min-height:32rem;background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);overflow:hidden}
+.chat-side{border-right:1px solid var(--color-border-line);display:flex;flex-direction:column;min-height:0;background:var(--color-bg)}
+.chat-side-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1rem .6rem}
+.chat-side-head h2{margin:0;font-size:1.35rem}
+.chat-noti{font:inherit;font-size:.9rem;background:none;border:1px solid var(--color-border-line);border-radius:8px;padding:.25rem .6rem;cursor:pointer;color:var(--color-fg)}
+.chat-rooms{list-style:none;margin:0;padding:0 .5rem .8rem;overflow:auto;flex:1}
+.chat-rooms li button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:2.6rem 1fr auto;gap:.7rem;align-items:center;padding:.65rem .6rem;border-radius:10px;cursor:pointer}
+.chat-rooms li button:hover{background:var(--color-panel)}
+.chat-rooms li button[aria-current=true]{background:var(--cds-chart-grid)}
+.chat-rooms li button:focus-visible{outline:2px solid var(--color-fg)}
+.cr-av{width:2.6rem;height:2.6rem;border-radius:50%;display:grid;place-items:center;background:var(--color-fg);color:var(--color-bg);font-size:.95rem;font-weight:700}
+.cr-av.all{background:var(--color-bad)}
+.cr-name{font-size:1.15rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cr-name small{font-weight:400;color:var(--color-fg-muted);font-size:.95rem;margin-left:.3rem}
+.cr-last{font-size:.92rem;color:var(--color-fg-muted)}
+.cr-badge{min-width:1.5rem;padding:0 .45rem;border-radius:999px;background:var(--color-bad);color:#fff;font-size:.9rem;font-weight:700;line-height:1.5rem;text-align:center}
+.cr-badge:empty{display:none}
+.chat-main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.chat-head{display:flex;align-items:center;gap:.6rem;padding:1rem 1.2rem;border-bottom:1px solid var(--color-border-line);background:var(--color-bg)}
+.chat-head h3{margin:0;font-size:1.3rem}
+.chat-back{display:none;font:inherit;font-size:1.3rem;background:none;border:0;cursor:pointer;color:var(--color-fg);padding:0 .3rem}
+.chat-log{flex:1;overflow:auto;padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.5rem}
+.chat-day{align-self:center;font-size:.92rem;color:var(--color-fg-muted);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:999px;padding:.15rem .9rem;margin:.6rem 0}
+.msg{display:flex;flex-direction:column;max-width:72%;align-self:flex-start}
+.msg.me{align-self:flex-end;align-items:flex-end}
+.msg .who{font-size:.95rem;font-weight:700;margin:0 0 .2rem .2rem}
+.msg .line{display:flex;align-items:flex-end;gap:.4rem}
+.msg.me .line{flex-direction:row-reverse}
+.bub{font-size:1.15rem;line-height:1.55;padding:.6rem .9rem;border-radius:14px;background:var(--color-bg);border:1px solid var(--color-border-line);white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.me .bub{background:var(--color-fg);color:var(--color-bg);border-color:var(--color-fg)}
+.bub a{color:inherit;text-decoration:underline}
+.bub .tk{all:unset;cursor:pointer;text-decoration:underline;font-weight:700}
+.msg .tm{font-size:.8rem;color:var(--color-fg-muted);white-space:nowrap}
+.msg .del{all:unset;cursor:pointer;font-size:.8rem;color:var(--color-fg-muted);text-decoration:underline;margin-top:.15rem}
+.msg .files{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.35rem}
+.msg .files img{max-width:220px;max-height:180px;border-radius:10px;display:block;border:1px solid var(--color-border-line)}
+.msg .files a.doc{font-size:1rem;color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:8px;padding:.35rem .7rem;text-decoration:none}
+.chat-empty{margin:auto;color:var(--color-fg-muted);font-size:1.1rem;text-align:center}
+.chat-input{border-top:1px solid var(--color-border-line);background:var(--color-bg);padding:.7rem .9rem}
+.chat-row{display:flex;gap:.6rem;align-items:flex-end}
+.chat-row textarea{flex:1;font:inherit;font-size:1.15rem;color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:10px;padding:.6rem .8rem;resize:none;max-height:9rem;min-height:2.9rem}
+.chat-file{font-size:1.4rem;cursor:pointer;padding:.35rem .5rem;border-radius:8px}
+.chat-file:hover{background:var(--color-panel)}
+.chat-send{font:inherit;font-size:1.1rem;font-weight:700;background:var(--color-fg);color:var(--color-bg);border:0;border-radius:10px;padding:.7rem 1.2rem;cursor:pointer}
+.chat-send[disabled]{opacity:.45;cursor:default}
+.chat-input[hidden]{display:none}
+@media (max-width:760px){.chat{grid-template-columns:1fr;height:calc(100vh - 12rem)}.chat.in-room .chat-side{display:none}.chat:not(.in-room) .chat-main{display:none}.chat-back{display:block}.msg{max-width:88%}}
 /* 탭 배지 */
 .tab-badge[hidden]{display:none}
 .tab-badge{display:inline-block;min-width:1.4rem;margin-left:.35rem;padding:0 .4rem;border-radius:999px;background:var(--color-bad);color:var(--color-bg);font-size:.9rem;font-weight:700;line-height:1.4rem;text-align:center}
@@ -398,6 +446,7 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     <button class="ld-tab" role="tab" id="all" data-page="page-all" aria-selected="false">전체 업무</button>
     <button class="ld-tab" role="tab" id="cal" data-page="page-cal" aria-selected="false">일정</button>
     <button class="ld-tab" role="tab" id="appr" data-page="page-appr" aria-selected="false">결재<span class="tab-badge" id="appr-badge" hidden></span></button>
+    <button class="ld-tab" role="tab" id="chat" data-page="page-chat" aria-selected="false">메신저<span class="tab-badge" id="chat-badge" hidden></span></button>
     <button class="ld-tab" role="tab" id="inq" data-page="page-inq" aria-selected="false">문의 접수함<span class="tab-badge" id="inq-badge" hidden></span></button>
     <button class="ld-tab" role="tab" id="staff" data-page="page-staff" aria-selected="false" hidden>직원 관리<span class="tab-badge" id="staff-badge" hidden></span></button>
     <button type="button" class="tab-add" id="task-new">+ 업무 등록</button>
@@ -550,6 +599,27 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
       </div>
       <div class="ld-tools" id="ap-chips"></div>
       <ul class="ap-list" id="ap-list"></ul>
+    </section>
+  </div>
+
+  <div class="ld-page" id="page-chat" role="tabpanel" hidden>
+    <section class="chat" id="chat-box">
+      <aside class="chat-side" id="chat-side">
+        <div class="chat-side-head"><h2>대화</h2><button type="button" class="chat-noti" id="chat-noti" hidden>🔔 알림 켜기</button></div>
+        <ul class="chat-rooms" id="chat-rooms"></ul>
+      </aside>
+      <div class="chat-main" id="chat-main">
+        <div class="chat-head"><button type="button" class="chat-back" id="chat-back" aria-label="대화 목록으로">←</button><h3 id="chat-title">대화를 골라 주세요</h3></div>
+        <div class="chat-log" id="chat-log" aria-live="polite"></div>
+        <div class="chat-input" id="chat-input">
+          <div class="nt-picked" id="chat-picked"></div>
+          <div class="chat-row">
+            <label class="chat-file" title="사진·PDF 첨부">📎<input type="file" id="chat-file" multiple accept="image/*,.pdf" hidden></label>
+            <textarea id="chat-text" rows="1" placeholder="메시지를 입력하세요 (Enter 보내기, Shift+Enter 줄바꿈)"></textarea>
+            <button type="button" class="chat-send" id="chat-send">보내기</button>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
 
@@ -1257,7 +1327,7 @@ dash.onData(() => {
   dash.onData(draw);
 
   const named = location.hash.slice(1);
-  if (['all', 'cal', 'appr', 'inq'].includes(named)) show(named, false);
+  if (['all', 'cal', 'appr', 'inq', 'chat'].includes(named)) show(named, false);
   else if (named.startsWith('task-')) { current = decodeURIComponent(named.slice(5)); order = [current]; showPage('page-detail'); draw(); window.LD.pendingNotes = current; }
 })();
 </script>
@@ -2172,6 +2242,199 @@ window.LD.onApprovals = [];
     load();
     try { LD_SB.channel('inq-live').on('postgres_changes', { event: '*', schema: 'public', table: 'inquiries' }, () => { if (!openId) load(); }).subscribe(); } catch {}
     setInterval(() => { if (!openId) load(); }, 60000);
+  });
+})();
+</script>
+<script>
+// 사내 메신저: 전체 대화방 + 1:1 대화
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const OK_EXT = { pdf: 'application/pdf' };
+  const typeOf = (f) => (/^image\//.test(f.type) ? f.type : OK_EXT[(f.name.split('.').pop() || '').toLowerCase()] || null);
+  let me = null, room = null, msgs = [], unread = {}, lastAt = {}, lastText = {}, files = [], sending = false;
+  const dmRoom = (a, b) => 'dm:' + [a, b].sort().join(':');
+  const otherOf = (r) => { const [, a, b] = r.split(':'); return a === me ? b : a; };
+  const nameOf = (id) => { const p = (LD_ALL_PROFILES() || []).find((x) => x.id === id); return p ? p.name : '퇴사한 직원'; };
+  const titleOf = (id) => { const p = (LD_ALL_PROFILES() || []).find((x) => x.id === id); return p && p.title ? p.title : ''; };
+  const pad = (n) => String(n).padStart(2, '0');
+  const hm = (iso) => { const d = new Date(iso); const h = d.getHours(); return `${h < 12 ? '오전' : '오후'} ${h % 12 || 12}:${pad(d.getMinutes())}`; };
+  const dayLabel = (iso) => { const d = new Date(iso); return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 ${'일월화수목금토'[d.getDay()]}요일`; };
+  const shortWhen = (iso) => { if (!iso) return ''; const d = new Date(iso), n = new Date(); return d.toDateString() === n.toDateString() ? hm(iso) : `${d.getMonth() + 1}/${d.getDate()}`; };
+
+  // 메시지 본문: 링크와 업무번호(T-1234)를 눌러 이동할 수 있게
+  const renderBody = (text) => {
+    const frag = document.createDocumentFragment();
+    const re = /(https?:\/\/[^\s]+)|\b(T-\d{4,})\b/g; let i = 0, m;
+    while ((m = re.exec(text))) {
+      if (m.index > i) frag.append(text.slice(i, m.index));
+      if (m[1]) { const a = mk('a', '', m[1]); a.href = m[1]; a.target = '_blank'; a.rel = 'noopener'; frag.appendChild(a); }
+      else { const b = mk('button', 'tk', m[2]); b.type = 'button'; b.addEventListener('click', () => LD.openTask(m[2], [m[2]])); frag.appendChild(b); }
+      i = re.lastIndex;
+    }
+    if (i < text.length) frag.append(text.slice(i));
+    return frag;
+  };
+
+  const totalBadge = () => {
+    const n = Object.values(unread).reduce((a, b) => a + (b || 0), 0);
+    const b = $('chat-badge'); b.hidden = !n; b.textContent = n > 99 ? '99+' : String(n);
+  };
+
+  function drawRooms() {
+    const ul = $('chat-rooms'); ul.replaceChildren();
+    const people = LD_PEOPLE().filter((p) => p.id !== me).sort((a, b) => (lastAt[dmRoom(me, b.id)] || '').localeCompare(lastAt[dmRoom(me, a.id)] || '') || a.name.localeCompare(b.name, 'ko'));
+    const entries = [{ r: 'all', name: '전체 대화방', sub: `${LD_PEOPLE().length}명`, av: '전체', cls: 'all' }]
+      .concat(people.map((p) => ({ r: dmRoom(me, p.id), name: p.name, sub: p.title || '', av: p.name.length > 2 ? p.name.slice(-2) : p.name })));
+    for (const e of entries) {
+      const li = mk('li'); const b = mk('button'); b.type = 'button'; b.setAttribute('aria-current', String(room === e.r));
+      const av = mk('span', 'cr-av' + (e.cls ? ' ' + e.cls : ''), e.av);
+      const mid = mk('div'); mid.style.minWidth = '0';
+      const nm = mk('div', 'cr-name', e.name); if (e.sub) nm.appendChild(mk('small', '', e.sub));
+      mid.append(nm, mk('div', 'cr-last', lastText[e.r] ? `${shortWhen(lastAt[e.r])} · ${lastText[e.r]}` : '대화를 시작해 보세요'));
+      mid.lastChild.style.cssText = 'white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+      const bd = mk('span', 'cr-badge', unread[e.r] ? String(unread[e.r]) : '');
+      b.append(av, mid, bd); b.addEventListener('click', () => openRoom(e.r));
+      li.appendChild(b); ul.appendChild(li);
+    }
+  }
+
+  function drawLog(scroll) {
+    const log = $('chat-log'); const atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+    log.replaceChildren();
+    if (!room) { log.appendChild(mk('p', 'chat-empty', '왼쪽에서 대화방을 골라 주세요.')); return; }
+    if (!msgs.length) { log.appendChild(mk('p', 'chat-empty', '아직 메시지가 없어요. 첫 메시지를 보내 보세요.')); return; }
+    let lastDay = '', lastSender = '', lastMin = '';
+    for (const m of msgs) {
+      const day = new Date(m.created_at).toDateString();
+      if (day !== lastDay) { log.appendChild(mk('div', 'chat-day', dayLabel(m.created_at))); lastDay = day; lastSender = ''; }
+      const mine = m.sender === me;
+      const box = mk('div', 'msg' + (mine ? ' me' : ''));
+      const minute = m.created_at.slice(0, 16);
+      if (!mine && room === 'all' && (m.sender !== lastSender || minute !== lastMin)) box.appendChild(mk('div', 'who', `${nameOf(m.sender)}${titleOf(m.sender) ? ' ' + titleOf(m.sender) : ''}`));
+      const line = mk('div', 'line');
+      const col = mk('div'); col.style.minWidth = '0';
+      if (m.body) { const bub = mk('div', 'bub'); bub.appendChild(renderBody(m.body)); col.appendChild(bub); }
+      const fl = Array.isArray(m.files) ? m.files : [];
+      if (fl.length) {
+        const fb = mk('div', 'files');
+        fl.forEach((f) => {
+          if (!f || !/^[0-9a-f]{32}$/.test(String(f.id))) return;
+          const a = mk('a'); a.href = LD_BLOB(f.id); a.target = '_blank'; a.rel = 'noopener';
+          if (/^image\//.test(String(f.type))) { const img = mk('img'); img.src = LD_BLOB(f.id); img.alt = String(f.name || '사진'); img.loading = 'lazy'; a.appendChild(img); }
+          else { a.className = 'doc'; a.textContent = '📄 ' + String(f.name || '첨부파일'); }
+          fb.appendChild(a);
+        });
+        col.appendChild(fb);
+      }
+      line.append(col, mk('span', 'tm', hm(m.created_at)));
+      box.appendChild(line);
+      if (mine) {
+        const del = mk('button', 'del', '삭제'); del.type = 'button';
+        del.addEventListener('click', async () => {
+          if (!confirm('이 메시지를 삭제할까요?')) return;
+          const { data, error } = await LD_SB.from('messages').delete().eq('id', m.id).select('id');
+          if (!error && data && data.length) { msgs = msgs.filter((x) => x.id !== m.id); drawLog(); }
+        });
+        box.appendChild(del);
+      }
+      log.appendChild(box);
+      lastSender = m.sender; lastMin = minute;
+    }
+    if (scroll || atBottom) log.scrollTop = log.scrollHeight;
+  }
+
+  const markRead = async (r) => {
+    if (!r || document.hidden || $('page-chat').hidden) return;
+    unread[r] = 0; totalBadge(); drawRooms();
+    try { await LD_SB.from('chat_reads').upsert({ user_id: me, room: r, last_read: new Date().toISOString() }, { onConflict: 'user_id,room' }); } catch {}
+  };
+
+  async function openRoom(r) {
+    room = r; files = []; drawPicked();
+    $('chat-box').classList.add('in-room');
+    $('chat-title').textContent = r === 'all' ? '전체 대화방' : `${nameOf(otherOf(r))}${titleOf(otherOf(r)) ? ' ' + titleOf(otherOf(r)) : ''}`;
+    $('chat-input').hidden = false;
+    msgs = []; drawLog(true); drawRooms();
+    const { data, error } = await LD_SB.from('messages').select('*').eq('room', r).order('created_at', { ascending: false }).limit(300);
+    if (room !== r) return;
+    msgs = error ? [] : (data || []).slice().sort((a, b) => a.created_at.localeCompare(b.created_at));
+    drawLog(true); markRead(r);
+    $('chat-text').focus();
+  }
+
+  const refreshUnread = async () => {
+    const { data, error } = await LD_SB.rpc('chat_unread');
+    if (error || !Array.isArray(data)) return;
+    unread = {}; data.forEach((x) => { unread[x.room] = Number(x.unread) || 0; lastAt[x.room] = x.last_at; if (x.last_body) lastText[x.room] = x.last_body; });
+    if (room && !$('page-chat').hidden && !document.hidden) unread[room] = 0;
+    totalBadge(); drawRooms();
+  };
+
+  // 첨부
+  const drawPicked = () => {
+    const box = $('chat-picked'); box.replaceChildren();
+    files.forEach((f, i) => { const c = mk('span', 'nt-chip', f.name); const x = mk('button', '', '×'); x.type = 'button'; x.addEventListener('click', () => { files.splice(i, 1); drawPicked(); }); c.appendChild(x); box.appendChild(c); });
+  };
+  $('chat-file').addEventListener('change', () => {
+    for (const f of $('chat-file').files) { if (typeOf(f) && f.size <= 20 * 1048576) files.push(f); else alert(`${f.name}: 사진이나 PDF(20MB 이하)만 보낼 수 있어요.`); }
+    $('chat-file').value = ''; drawPicked();
+  });
+
+  const send = async () => {
+    const text = $('chat-text').value.trim();
+    if (!room || sending || (!text && !files.length)) return;
+    sending = true; $('chat-send').disabled = true;
+    try {
+      const up = [];
+      for (const f of files) { const cap = await LD.cap; const r = await cap.assets.upload(f, { type: typeOf(f) }); up.push({ id: r.id, name: f.name, type: r.contentType, size: r.sizeBytes }); }
+      const { data, error } = await LD_SB.from('messages').insert({ room, sender: me, body: text.slice(0, 2000), files: up }).select('*').single();
+      if (error) throw error;
+      $('chat-text').value = ''; autoGrow(); files = []; drawPicked();
+      if (data && !msgs.some((x) => x.id === data.id)) msgs.push(data);
+      lastAt[room] = data ? data.created_at : new Date().toISOString(); lastText[room] = text || '(첨부파일)';
+      drawLog(true); drawRooms(); markRead(room);
+    } catch (e) { alert('보내지 못했어요. 잠시 후 다시 해 주세요.'); }
+    finally { sending = false; $('chat-send').disabled = false; $('chat-text').focus(); }
+  };
+  const autoGrow = () => { const t = $('chat-text'); t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 144) + 'px'; };
+  $('chat-text').addEventListener('input', autoGrow);
+  $('chat-text').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); } });
+  $('chat-send').addEventListener('click', send);
+  $('chat-back').addEventListener('click', () => { room = null; $('chat-box').classList.remove('in-room'); $('chat-input').hidden = true; $('chat-title').textContent = '대화를 골라 주세요'; drawRooms(); drawLog(); });
+
+  // 컴퓨터 알림 (현황판이 열려 있을 때만)
+  const notiBtn = $('chat-noti');
+  const notiOk = () => 'Notification' in window && Notification.permission === 'granted';
+  if ('Notification' in window && Notification.permission === 'default') notiBtn.hidden = false;
+  notiBtn.addEventListener('click', async () => { try { await Notification.requestPermission(); } catch {} notiBtn.hidden = !('Notification' in window) || Notification.permission !== 'default'; });
+
+  const onNew = (m) => {
+    lastAt[m.room] = m.created_at; lastText[m.room] = m.body || '(첨부파일)';
+    if (m.room === room) {
+      if (!msgs.some((x) => x.id === m.id)) { msgs.push(m); drawLog(); }
+      if (m.sender !== me) markRead(room);
+    } else if (m.sender !== me) { unread[m.room] = (unread[m.room] || 0) + 1; totalBadge(); }
+    drawRooms();
+    if (m.sender !== me && (document.hidden || m.room !== room || $('page-chat').hidden) && notiOk()) {
+      try { new Notification(`${nameOf(m.sender)}${m.room === 'all' ? ' (전체 대화방)' : ''}`, { body: m.body || '첨부파일을 보냈어요', tag: m.room }); } catch {}
+    }
+  };
+
+  document.getElementById('chat').addEventListener('click', () => { drawRooms(); refreshUnread(); if (room) { markRead(room); drawLog(true); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && room) markRead(room); });
+
+  LD.cap.then(async () => {
+    const m0 = LD_ME(); if (!m0) return; me = m0.id;
+    drawRooms(); drawLog(); $('chat-input').hidden = true;
+    await refreshUnread();
+    try {
+      LD_SB.channel('chat-live')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (pl) => { if (pl.new) onNew(pl.new); })
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (pl) => { if (pl.old && pl.old.room === room) { msgs = msgs.filter((x) => x.id !== pl.old.id); drawLog(); } })
+        .subscribe();
+    } catch {}
+    setInterval(refreshUnread, 30000);
   });
 })();
 </script>
