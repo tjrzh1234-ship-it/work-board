@@ -1569,6 +1569,8 @@ window.LD.onApprovals = [];
   const mine = (a) => !!(cap && cap.me && a && a.author === cap.me);
   const canWrite = () => !!(cap && cap.db && cap.canEdit !== false);
   const who = (id, fb) => (id && cap && id === cap.me ? '나' : (window.LD_NAME && LD_NAME(id)) || fb || '팀원');
+  const canDecide = (a) => !!(a && LD_CAN_APPROVE(a.author) && (!a.approver || (cap && a.approver === cap.me)));
+  const personLabel = (id) => { const p = (window.LD_ALL_PROFILES ? LD_ALL_PROFILES() : []).find((x) => x.id === id); return p ? `${p.title ? p.title + ' ' : ''}${p.name}` : ''; };
   const approverLabel = (author) => (window.LD_APPROVERS_FOR ? LD_APPROVERS_FOR(author).map((p) => `${p.title ? p.title + ' ' : ''}${p.name}`).join(', ') : '') || '결재권자';
   let savedName = ''; try { savedName = localStorage.getItem('ld-name') || ''; } catch {}
 
@@ -1588,7 +1590,8 @@ window.LD.onApprovals = [];
     $('ap-wait').textContent = String(wait);
     $('ap-draft').textContent = String(items.filter((a) => a.status === '초안' && mine(a)).length);
     $('ap-ok').textContent = String(items.filter((a) => a.status === '승인' && a.decidedAt.slice(0, 7) === ym).length);
-    const badge = $('appr-badge'); badge.hidden = !wait; badge.textContent = String(wait);
+    const mine4me = items.filter((a) => a.status === '대기' && canDecide(a)).length;
+    const badge = $('appr-badge'); badge.hidden = !mine4me; badge.textContent = String(mine4me);
     const ul = $('ap-list'); ul.replaceChildren();
     const rows = visible().filter((a) => filter === '전체' || a.status === filter);
     if (!rows.length) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = { '대기': '기다리는 결재가 없어요.', '초안': '작성 중인 초안이 없어요.' }[filter] || '해당하는 문서가 없어요.'; ul.appendChild(li); return; }
@@ -1599,7 +1602,7 @@ window.LD.onApprovals = [];
       const t = document.createElement('div'); t.className = 'ap-title'; t.textContent = a.title;
       const sub = document.createElement('div'); sub.className = 'ap-sub';
       const extra = a.kind === '연차·휴가' && a.start ? ` · ${LD.range(a.start, a.end)}` : a.amount ? ` · ${won(a.amount)}` : '';
-      sub.textContent = `기안 ${a.name || who(a.author)} · ${LD.kd((a.sentAt || a.at).slice(0, 10))}${extra}`;
+      sub.textContent = `기안 ${a.name || who(a.author)}${a.approver ? ' → ' + (personLabel(a.approver) || '결재자') : ''} · ${LD.kd((a.sentAt || a.at).slice(0, 10))}${extra}`;
       mid.append(t, sub);
       const st = document.createElement('span'); st.className = 'ap-st ' + (stCls[a.status] || ''); st.textContent = stLabel[a.status];
       row.append(LD.pill(a.kind, kcolor(a.kind)), mid, st);
@@ -1639,7 +1642,7 @@ window.LD.onApprovals = [];
     r2.append(c1, c2);
     const r3 = el('tr');
     const n1 = el('td', 'nm', a ? `${a.name || who(a.author)}${a.sentAt ? ' ' + LD.kd(a.sentAt.slice(0, 10)) : ''}` : (savedName || ' '));
-    const n2 = el('td', 'nm', a && (a.status === '승인' || a.status === '반려') ? `${(window.LD_NAME && LD_NAME(a.decidedBy)) || '책임자'} ${LD.kd(a.decidedAt.slice(0, 10))}` : approverLabel(a && a.author));
+    const n2 = el('td', 'nm', a && (a.status === '승인' || a.status === '반려') ? `${(window.LD_NAME && LD_NAME(a.decidedBy)) || '책임자'} ${LD.kd(a.decidedAt.slice(0, 10))}` : (a && a.approver ? personLabel(a.approver) : approverLabel(a && a.author)));
     r3.append(n1, n2);
     t.append(r1, r2, r3);
     return t;
@@ -1661,7 +1664,12 @@ window.LD.onApprovals = [];
     const row = (label, content) => { const tr = el('tr'); tr.appendChild(el('th', '', label)); const td = el('td'); if (content instanceof Node) td.appendChild(content); else td.textContent = content; tr.appendChild(td); tb.appendChild(tr); return tr; };
 
     if (editing) {
-      const v = a || { kind: '연차·휴가', name: savedName, title: '', body: '', start: '', end: '', amount: 0, files: [] };
+      const v = a || { kind: '연차·휴가', name: savedName, title: '', body: '', start: '', end: '', amount: 0, files: [], approver: '' };
+      const apSel = el('select');
+      const apList = window.LD_APPROVERS_FOR && cap && cap.me ? LD_APPROVERS_FOR(cap.me) : [];
+      apSel.appendChild(new Option(apList.length ? '결재자를 골라 주세요' : '결재할 수 있는 사람이 없어요', ''));
+      apList.forEach((p) => apSel.appendChild(new Option(`${p.title ? p.title + ' ' : ''}${p.name}`, p.id)));
+      apSel.value = apList.some((p) => p.id === v.approver) ? v.approver : (apList.length === 1 ? apList[0].id : '');
       const kind = el('select'); KINDS.forEach((k) => kind.appendChild(new Option(k, k))); kind.value = v.kind;
       const name = el('input'); name.value = v.name; name.placeholder = '예: 이서연';
       const day = LD.kd(LD.iso(new Date()));
@@ -1687,6 +1695,7 @@ window.LD.onApprovals = [];
       row('문서 종류', kind);
       row('기안자', name);
       row('기안일', day);
+      row('결재자', apSel);
       const rDates = row('기간', dates);
       const rAmt = row('금액 (원)', amt);
       row('제목', title);
@@ -1711,7 +1720,8 @@ window.LD.onApprovals = [];
         let s1 = ds.value, s2 = de.value || ds.value;
         if (status === '대기' && kind.value === '연차·휴가' && !s1) { msg.textContent = '휴가 기간을 골라 주세요.'; ds.focus(); return; }
         if (s1 && s2 && s2 < s1) [s1, s2] = [s2, s1];
-        if (status === '대기' && !confirm('책임자에게 결재를 올릴까요?')) return;
+        if (status === '대기' && !apSel.value) { msg.textContent = '결재자를 골라 주세요.'; apSel.focus(); return; }
+        if (status === '대기' && !confirm(`${apSel.options[apSel.selectedIndex].text}에게 결재를 올릴까요?`)) return;
         bDraft.disabled = bSend.disabled = true;
         try {
           const up = [...kept];
@@ -1720,7 +1730,7 @@ window.LD.onApprovals = [];
           const now = new Date().toISOString();
           const doc = { kind: kind.value, name: n, title: t, body: body.value.trim(), files: up, status, author: (a && a.author) || cap.me || null, at: (a && a.at) || now, updatedAt: now,
             start: kind.value === '연차·휴가' ? s1 : '', end: kind.value === '연차·휴가' ? s2 : '', amount: kind.value === '지출' || kind.value === '구매' ? Number(String(amt.value).replace(/[^0-9]/g, '')) || 0 : 0,
-            sentAt: status === '대기' ? now : '', note: '', decidedBy: null, decidedAt: '' };
+            sentAt: status === '대기' ? now : '', note: '', decidedBy: null, decidedAt: '', approver: apSel.value || '' };
           let id = a && a.id;
           if (id) await cap.db.collection('approvals').doc(id).set(doc);
           else { const ref = await cap.db.collection('approvals').add(doc); id = ref.id; }
@@ -1745,6 +1755,7 @@ window.LD.onApprovals = [];
     row('문서 종류', a.kind);
     row('기안자', a.name || who(a.author));
     row('기안일', LD.kd((a.sentAt || a.at).slice(0, 10)));
+    if (a.approver) row('결재자', personLabel(a.approver) || '(퇴사한 직원)');
     if (a.kind === '연차·휴가') row('기간', a.start ? `${LD.range(a.start, a.end)} (${LD.days(a.start, a.end)}일)` : '—');
     if (a.kind === '지출' || a.kind === '구매') row('금액', a.amount ? won(a.amount) : '—');
     row('제목', a.title);
@@ -1766,8 +1777,8 @@ window.LD.onApprovals = [];
     }
 
     const btns = el('div', 'doc-btns'); const msg = el('span', 'nt-msg'); msg.setAttribute('role', 'status'); btns.appendChild(msg);
-    if (a.status === '대기' && !LD_CAN_APPROVE(a.author)) { const w = el('div', 'doc-opinion'); w.appendChild(el('h4', '', `${approverLabel(a.author)}의 결재를 기다리고 있어요.`)); box.appendChild(w); }
-    if (a.status === '대기' && canWrite() && LD_CAN_APPROVE(a.author)) {
+    if (a.status === '대기' && !canDecide(a)) { const w = el('div', 'doc-opinion'); w.appendChild(el('h4', '', `${a.approver ? personLabel(a.approver) || '결재자' : approverLabel(a.author)}의 결재를 기다리고 있어요.`)); box.appendChild(w); }
+    if (a.status === '대기' && canWrite() && canDecide(a)) {
       const op = el('div', 'doc-opinion');
       op.appendChild(el('h4', '', '책임자 결재'));
       const note = el('textarea'); note.rows = 3; note.placeholder = '의견 (선택). 반려할 때는 이유를 적어 주세요.';
@@ -1814,7 +1825,7 @@ window.LD.onApprovals = [];
         const date = (x) => (/^\d{4}-\d{2}-\d{2}$/.test(x) ? x : '');
         return { id: d.id, kind: KINDS.includes(v.kind) ? v.kind : '기타', name: String(v.name || ''), title: String(v.title || '(제목 없음)'), body: String(v.body || ''),
           status: ['초안', '대기', '승인', '반려'].includes(v.status) ? v.status : '대기', author: v.author, at: String(v.at || ''), sentAt: String(v.sentAt || ''),
-          start: date(v.start), end: date(v.end), amount: Number(v.amount) || 0, files: Array.isArray(v.files) ? v.files : [], note: String(v.note || ''), decidedBy: v.decidedBy, decidedAt: String(v.decidedAt || '') };
+          start: date(v.start), end: date(v.end), amount: Number(v.amount) || 0, files: Array.isArray(v.files) ? v.files : [], note: String(v.note || ''), approver: String(v.approver || ''), decidedBy: v.decidedBy, decidedAt: String(v.decidedAt || '') };
       });
       LD.approvals = items;
       LD.onApprovals.forEach((f) => f());
