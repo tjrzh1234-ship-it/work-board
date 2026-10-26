@@ -11,35 +11,61 @@
 :root{
   --font-anthropic-sans:'Noto Sans KR',system-ui,-apple-system,'Malgun Gothic',sans-serif;
   --font-anthropic-serif:'Noto Serif KR','Batang',serif;
-  --color-fg:#1f1e1c;--color-fg-muted:#6b6862;--color-bg:#ffffff;--color-panel:#f7f6f3;--color-border-line:#e3e1dc;
-  --color-ok:#1f8a4c;--color-warn:#b86e00;--color-bad:#c62828;
-  --cds-radius:10px;--cds-chart-grid:#ecebe7;--cds-chart-muted:#a8a59e;
-  --cds-surface-popover:#ffffff;--cds-border:#e3e1dc;--cds-shadow-popover:0 6px 20px rgba(0,0,0,.12);--cds-text-secondary:#6b6862;
+  --color-fg:#1a1a1a;--color-fg-muted:#6e6a64;--color-bg:#ffffff;--color-panel:#f3f2ef;--color-border-line:#dcd9d3;
+  --ac:#1a1a1a;--ac-2:#9a968f;--cement-d:#5e5a54;--color-ok:#1a1a1a;--color-warn:#1a1a1a;--color-bad:#c62828;
+  --cds-radius:10px;--cds-chart-grid:#e8e6e1;--cds-chart-muted:#c2beb7;
+  --cds-surface-popover:#ffffff;--cds-border:#dcd9d3;--cds-shadow-popover:0 6px 20px rgba(0,0,0,.12);--cds-text-secondary:#6b6862;
   --cds-dur-slow:.3s;
-  --c0:#2f6fd6;--c1:#e0663a;--c2:#17a07a;--c3:#7b5cd6;--c4:#d6a12f;--c5:#2aa3c4;--c6:#c2508f;--c7:#5d8a2f;
+  --c0:#1a1a1a;--c1:#9a968f;--c2:#5e5a54;--c3:#c2beb7;--c4:#1a1a1a;--c5:#9a968f;--c6:#5e5a54;--c7:#c2beb7;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --color-fg:#ecebe8;--color-fg-muted:#a3a09a;--color-bg:#1b1a19;--color-panel:#242321;--color-border-line:#3a3936;
-  --color-ok:#4cc27e;--color-warn:#f0a43a;--color-bad:#ff6b6b;--cds-chart-grid:#33322f;--cds-chart-muted:#77746e;
+  --color-fg:#efeeeb;--color-fg-muted:#a29e97;--color-bg:#161616;--color-panel:#222120;--color-border-line:#3a3936;
+  --ac:#efeeeb;--ac-2:#8f8b84;--cement-d:#b8b4ad;--color-ok:#efeeeb;--color-warn:#efeeeb;--color-bad:#ff5a52;--cds-chart-grid:#33322f;--cds-chart-muted:#5f5c56;
   --cds-surface-popover:#2a2927;--cds-border:#3a3936;--cds-text-secondary:#a3a09a;
-  --c0:#6a9cf0;--c1:#f08a62;--c2:#3cc79c;--c3:#a38af0;--c4:#ebc05a;--c5:#5cc4e0;--c6:#e57fb4;--c7:#8fbf55;
+  --c0:#efeeeb;--c1:#8f8b84;--c2:#b8b4ad;--c3:#5f5c56;--c4:#efeeeb;--c5:#8f8b84;--c6:#b8b4ad;--c7:#5f5c56;
   color-scheme:dark;
 }}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans);-webkit-text-size-adjust:100%}
 #dash-root{padding:28px clamp(16px,4vw,48px) 60px}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--color-panel)}
+.login[hidden],#dash-root[hidden]{display:none}
+.lg-box{width:100%;max-width:420px;background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:14px;padding:36px 32px;display:flex;flex-direction:column;gap:16px}
+.lg-box h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:2rem;margin:0}
+.lg-sub{margin:-6px 0 6px;color:var(--color-fg-muted);font-size:1.1rem}
+.lg-box label{display:flex;flex-direction:column;gap:6px;font-size:1.05rem;color:var(--color-fg-muted)}
+.lg-box input{font:inherit;font-size:1.2rem;color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:10px;padding:12px 14px}
+.lg-box button{font:inherit;font-size:1.25rem;font-weight:700;background:var(--color-fg);color:var(--color-bg);border:0;border-radius:10px;padding:14px;cursor:pointer;margin-top:6px}
+.lg-box button[disabled]{opacity:.5}
+.lg-msg{margin:0;min-height:1.4em;color:var(--color-bad);font-size:1.05rem}
+.lg-help{margin:0;color:var(--color-fg-muted);font-size:.95rem}
 .dash-skeleton{color:transparent!important;background:var(--cds-chart-grid);border-radius:6px;min-width:3rem;display:inline-block}
-.demo-bar{background:#fff7e0;color:#6b4e00;border-bottom:1px solid #f0dca0;padding:10px 16px;font-size:15px;text-align:center;line-height:1.5}
-@media (prefers-color-scheme:dark){.demo-bar{background:#3a3220;color:#f0d690;border-color:#5a4a20}}
+.demo-bar{background:var(--color-panel);color:var(--color-fg-muted);border-bottom:1px solid var(--color-border-line);padding:10px 16px;font-size:15px;text-align:center;line-height:1.5}
+
 </style>
 </head>
 <body>
-<div class="demo-bar">초안 미리보기 화면입니다. 예시 데이터로 동작하며, 입력한 내용은 새로고침하면 처음 상태로 돌아갑니다.</div>
-<div id="dash-root">
+<div id="login" class="login" hidden>
+  <form id="lg-form" class="lg-box" autocomplete="on">
+    <h1>업무 현황판</h1>
+    <p class="lg-sub">직원 계정으로 로그인해 주세요.</p>
+    <label>이메일<input id="lg-email" type="email" autocomplete="username" required></label>
+    <label>비밀번호<input id="lg-pw" type="password" autocomplete="current-password" required></label>
+    <button id="lg-btn" type="submit">로그인</button>
+    <p class="lg-msg" id="lg-msg" role="status"></p>
+    <p class="lg-help">계정이 없거나 비밀번호를 잊으셨으면 관리자에게 문의해 주세요.</p>
+  </form>
+</div>
+<div id="dash-root" hidden>
 <style>
 .ld{font-family:var(--font-anthropic-sans);font-size:1.125rem;line-height:1.5;display:flex;flex-direction:column;gap:1.5rem;max-width:1280px;margin-inline:auto;word-break:keep-all}
+.me-bar{float:right;display:flex;align-items:center;gap:.6rem;font-size:1.05rem;margin-top:.4rem}
+.me-name{font-weight:700}
+.me-role:empty{display:none}
+.me-role{font-size:.9rem;border:1px solid var(--color-fg);border-radius:999px;padding:.05rem .6rem}
+#me-out{font:inherit;font-size:1rem;background:none;border:1px solid var(--color-border-line);border-radius:8px;padding:.3rem .8rem;cursor:pointer;color:var(--color-fg)}
 .ld-head h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:2rem;margin:0}
 .ld-take{margin:.4rem 0 0;font-size:1.25rem;color:var(--color-fg-muted)}
 .ld-take b{color:var(--color-fg);font-weight:700}
@@ -73,7 +99,7 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .pc-meta{font-size:1.05rem;color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
 .pc-meta .late{color:var(--color-bad);font-weight:700}
 .pc-mix{display:flex;height:9px;margin:.9rem 1.1rem .2rem;border-radius:5px;overflow:hidden;background:var(--cds-chart-grid)}
-.pc-list{list-style:none;margin:0;padding:.3rem 0;max-height:24rem;overflow:auto;flex:1}
+.pc-list{list-style:none;margin:0;padding:.5rem 0 .3rem;max-height:24rem;overflow:auto;flex:1}
 .pc-list li{display:grid;grid-template-columns:auto 1fr auto;gap:.7rem;align-items:center;padding:.55rem 1.1rem}
 .pc-list .tn{font-size:1.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-list .tp{font-size:.98rem;color:var(--color-fg-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -82,6 +108,8 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .pc-list .dd.soon{color:var(--color-warn);font-weight:700}
 .pc-list .none{grid-template-columns:1fr;color:var(--color-fg-muted)}
 .dot{width:.75rem;height:.75rem;border-radius:50%;display:inline-block}
+.urg-mark{width:.75rem;text-align:center;color:var(--color-bad);font-weight:800;font-size:1.25rem;line-height:1}
+.legend .lg-dot{width:.7rem;height:.7rem;border-radius:50%;background:var(--color-fg)}
 .urg{color:var(--color-bad);font-weight:800;margin-right:.25rem}
 .pc-foot{padding:.6rem 1.1rem;font-size:1.05rem;color:var(--color-fg-muted);border-top:1px solid var(--color-border-line)}
 .pc-foot b{color:var(--color-fg)}
@@ -171,6 +199,23 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .nt-files img{display:block;max-width:220px;max-height:160px;object-fit:cover}
 .nt-empty{color:var(--color-fg-muted);font-size:1.1rem;padding:.6rem 0}
 @media (max-width:640px){.nt{padding:1.2rem}}
+/* 업무 등록 */
+.ld .frm > label{flex:none}
+.nt-send{background:var(--ac)!important;color:var(--color-bg)!important}
+.tab-add{font:inherit;font-size:1.1rem;font-weight:700;margin-left:auto;align-self:center;background:var(--ac);color:var(--color-bg);border:0;border-radius:var(--cds-radius);padding:.5rem 1.1rem;cursor:pointer}
+.tab-add:hover{filter:brightness(1.1)}
+.tf{max-width:860px;width:100%;box-sizing:border-box}
+.tf .frm{margin:0;background:var(--color-panel);border:0;padding:0}
+.btn-del{font:inherit;font-size:1.05rem;background:none;border:0;color:var(--color-bad);cursor:pointer;margin-right:auto;text-decoration:underline}
+.dt-body{font-size:1.2rem;white-space:pre-wrap;line-height:1.7;background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:1rem 1.2rem;margin:0;overflow-wrap:anywhere}
+.dt-act{display:flex;flex-direction:column;gap:.7rem;border-top:1px solid var(--color-border-line);padding-top:1.2rem}
+.dt-act .lbl{font-size:1.05rem;color:var(--color-fg-muted)}
+.dt-act .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.st-btn{font:inherit;font-size:1.1rem;background:var(--color-bg);color:var(--color-fg);border:1px solid var(--color-border-line);border-radius:999px;padding:.4rem 1.1rem;cursor:pointer}
+.st-btn[aria-pressed=true]{background:var(--ac);color:var(--color-bg);border-color:var(--ac);font-weight:700}
+.st-btn:hover{border-color:var(--color-fg)}
+.edit-btn{font:inherit;font-size:1.1rem;font-weight:700;background:var(--color-bg);color:var(--color-fg);border:1px solid var(--color-fg);border-radius:var(--cds-radius);padding:.5rem 1.3rem;cursor:pointer;margin-left:auto}
+@media (max-width:640px){.tab-add{margin-left:0;width:100%;margin-top:.4rem}}
 /* 탭 배지 */
 .tab-badge[hidden]{display:none}
 .tab-badge{display:inline-block;min-width:1.4rem;margin-left:.35rem;padding:0 .4rem;border-radius:999px;background:var(--color-bad);color:var(--color-bg);font-size:.9rem;font-weight:700;line-height:1.4rem;text-align:center}
@@ -202,7 +247,7 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .cal-day.sel{outline:3px solid var(--color-fg);outline-offset:-3px}
 .cal-day .dn{font-size:1.3rem;font-weight:600;font-variant-numeric:tabular-nums}
 .cal-day.sun .dn{color:var(--color-bad)}
-.cal-day.today .dn{background:var(--color-fg);color:var(--color-bg);border-radius:999px;padding:0 .45rem;align-self:flex-start}
+.cal-day.today .dn{background:var(--ac);color:var(--color-bg);border-radius:999px;padding:0 .45rem;align-self:flex-start}
 .ev{display:block;box-sizing:border-box;max-width:100%;min-width:0;font-size:1.15rem;line-height:1.4;padding:.15rem .45rem;border-radius:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;color:var(--color-fg)}
 .ev .sw{display:inline-block;width:.85rem;height:.85rem;border-radius:3px;margin-right:.35rem;vertical-align:-.08rem}
 .ev-more{font-size:1.05rem;color:var(--color-fg-muted);padding-left:.3rem}
@@ -276,6 +321,7 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 
 <div class="ld">
   <header class="ld-head" id="top">
+    <div class="me-bar"><span class="me-name" id="me-name"></span><span class="me-role" id="me-role"></span><button type="button" id="me-out">로그아웃</button></div>
     <h1>업무 현황판</h1>
     <p class="ld-take" id="takeaway"><span class="dash-skeleton">불러오는 중</span></p>
   </header>
@@ -285,12 +331,13 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     <button class="ld-tab" role="tab" id="all" data-page="page-all" aria-selected="false">전체 업무</button>
     <button class="ld-tab" role="tab" id="cal" data-page="page-cal" aria-selected="false">일정</button>
     <button class="ld-tab" role="tab" id="appr" data-page="page-appr" aria-selected="false">결재<span class="tab-badge" id="appr-badge" hidden></span></button>
+    <button type="button" class="tab-add" id="task-new">+ 업무 등록</button>
   </nav>
 
   <div class="ld-page" id="page-overview" role="tabpanel">
     <section class="ld-tiles" id="summary" aria-label="요약">
       <div class="ld-tile bad"><div class="lbl">마감 지난 업무</div><div class="val"><span class="num dash-skeleton" data-source="kpi" data-field="지연" data-row="0">—</span><span class="unit">건</span></div></div>
-      <div class="ld-tile warn"><div class="lbl">검토 요청 (피드백)</div><div class="val"><span class="num dash-skeleton" data-source="kpi" data-field="피드백" data-row="0">—</span><span class="unit">건</span></div></div>
+      <div class="ld-tile"><div class="lbl">긴급 업무</div><div class="val"><span class="num dash-skeleton" data-source="kpi" data-field="긴급" data-row="0">—</span><span class="unit">건</span></div></div>
       <div class="ld-tile"><div class="lbl">이번 주 마감</div><div class="val"><span class="num dash-skeleton" data-source="kpi" data-field="이번주마감" data-row="0">—</span><span class="unit">건</span></div></div>
     </section>
 
@@ -315,7 +362,33 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
       </div>
     </section>
 
-    <p class="ld-note">지금은 예시 데이터입니다.</p>
+  </div>
+
+  <div class="ld-page" id="page-taskform" hidden>
+    <button type="button" class="back" id="tf-back">← 돌아가기</button>
+    <section class="ld-card tf">
+      <h2 id="tf-title">업무 등록</h2>
+      <div class="frm">
+        <label>업무명 *<input id="tf-name" placeholder="예: ○○상가 철거 견적서 작성"></label>
+        <div class="frm-row">
+          <label>담당자 *<input id="tf-who" list="tf-who-list" placeholder="이름 입력 또는 선택"></label>
+          <label>상태<select id="tf-status"><option>진행</option><option>보류</option><option>긴급</option></select></label>
+          <label>진척도<select id="tf-prog"></select></label>
+        </div>
+        <div class="frm-row">
+          <label>시작일<input type="date" id="tf-start" min="2000-01-01" max="2099-12-31"></label>
+          <label>마감일 (없으면 비워 두세요)<input type="date" id="tf-due" min="2000-01-01" max="2099-12-31"></label>
+        </div>
+        <label>업무 내용<textarea id="tf-body" rows="5" placeholder="해야 할 일, 참고 사항을 적어 주세요"></textarea></label>
+        <div class="frm-actions">
+          <span class="nt-msg" id="tf-msg" role="status"></span>
+          <button type="button" class="btn-del" id="tf-del" hidden>업무 삭제</button>
+          <button type="button" class="back" id="tf-cancel">취소</button>
+          <button type="button" class="nt-send" id="tf-save">저장</button>
+        </div>
+      </div>
+      <datalist id="tf-who-list"></datalist>
+    </section>
   </div>
 
   <div class="ld-page" id="page-detail" hidden>
@@ -417,30 +490,31 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ── 미리보기용 대체 기능 (저장 서버 없이 이 브라우저 안에서만 동작) ──
+// ── Supabase 연결: 로그인 · 권한 · 저장 ──
+// 아래 두 값만 Supabase 프로젝트 값으로 바꿔 넣으세요.
+// (Supabase → Project Settings → API 에 있는 Project URL 과 anon public key)
+const SUPABASE_URL = 'https://여기에-프로젝트-주소.supabase.co';
+const SUPABASE_ANON_KEY = '여기에-anon-public-키';
+
 (() => {
-  const BASE = '2026-10-26';
-  const pad = (n) => String(n).padStart(2, '0');
-  const isoLocal = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const shiftDays = Math.round((today - new Date(BASE + 'T00:00:00')) / 86400000);
-  const shift = (s) => { if (!/^\d{4}-\d{2}-\d{2}$/.test(s || '')) return s; const d = new Date(s + 'T00:00:00'); d.setDate(d.getDate() + shiftDays); return isoLocal(d); };
-  const shiftIso = (s) => { if (!s) return s; const d = new Date(s); d.setDate(d.getDate() + shiftDays); return d.toISOString(); };
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  window.LD_SB = sb;
 
-  // 예시 업무 (날짜는 오늘 기준으로 맞춰 보여줍니다)
-  const TASKS = [{"업무번호": "T-1001", "프로젝트": "신규 거래처 영업", "업무명": "거래처 미팅 자료 준비", "상태": "완료", "우선순위": "보통", "담당자": "한지훈", "작성자": "박준호", "시작일": "2026-10-19", "마감일": "2026-10-24", "진척도": "100", "수정일": "2026-10-20"}, {"업무번호": "T-1002", "프로젝트": "신규 거래처 영업", "업무명": "거래처 미팅 자료 준비 (2차)", "상태": "요청", "우선순위": "긴급", "담당자": "이서연", "작성자": "김태윤", "시작일": "2026-10-22", "마감일": "2026-11-09", "진척도": "0", "수정일": "2026-10-26"}, {"업무번호": "T-1003", "프로젝트": "신규 거래처 영업", "업무명": "견적서 발송", "상태": "진행", "우선순위": "긴급", "담당자": "이서연", "작성자": "한지훈", "시작일": "2026-10-16", "마감일": "2026-11-01", "진척도": "40", "수정일": "2026-10-23"}, {"업무번호": "T-1004", "프로젝트": "신규 거래처 영업", "업무명": "견적서 발송 (2차)", "상태": "피드백", "우선순위": "보통", "담당자": "김태윤", "작성자": "오세영", "시작일": "2026-09-26", "마감일": "2026-10-21", "진척도": "90", "수정일": "2026-10-13"}, {"업무번호": "T-1005", "프로젝트": "신규 거래처 영업", "업무명": "계약 조건 검토", "상태": "진행", "우선순위": "보통", "담당자": "한지훈", "작성자": "이서연", "시작일": "2026-10-05", "마감일": "2026-10-20", "진척도": "30", "수정일": "2026-10-07"}, {"업무번호": "T-1006", "프로젝트": "신규 거래처 영업", "업무명": "계약 조건 검토 (2차)", "상태": "진행", "우선순위": "보통", "담당자": "한지훈", "작성자": "정다은", "시작일": "2026-10-04", "마감일": "2026-10-20", "진척도": "60", "수정일": "2026-10-18"}, {"업무번호": "T-1007", "프로젝트": "신규 거래처 영업", "업무명": "제안서 수정", "상태": "보류", "우선순위": "보통", "담당자": "정다은", "작성자": "최유진", "시작일": "2026-10-16", "마감일": "2026-10-28", "진척도": "10", "수정일": "2026-10-26"}, {"업무번호": "T-1008", "프로젝트": "신규 거래처 영업", "업무명": "제안서 수정 (2차)", "상태": "완료", "우선순위": "보통", "담당자": "김태윤", "작성자": "최유진", "시작일": "2026-09-30", "마감일": "2026-10-19", "진척도": "100", "수정일": "2026-10-05"}, {"업무번호": "T-1009", "프로젝트": "신규 거래처 영업", "업무명": "거래처 방문 일정 조율", "상태": "피드백", "우선순위": "보통", "담당자": "김태윤", "작성자": "김태윤", "시작일": "2026-10-08", "마감일": "2026-10-25", "진척도": "90", "수정일": "2026-10-26"}, {"업무번호": "T-1010", "프로젝트": "신규 거래처 영업", "업무명": "거래처 방문 일정 조율 (2차)", "상태": "진행", "우선순위": "보통", "담당자": "이서연", "작성자": "김태윤", "시작일": "2026-10-13", "마감일": "2026-10-23", "진척도": "50", "수정일": "2026-10-26"}, {"업무번호": "T-1011", "프로젝트": "4분기 마케팅 캠페인", "업무명": "광고 소재 제작", "상태": "진행", "우선순위": "보통", "담당자": "오세영", "작성자": "한지훈", "시작일": "2026-10-15", "마감일": "2026-10-22", "진척도": "30", "수정일": "2026-10-24"}, {"업무번호": "T-1012", "프로젝트": "4분기 마케팅 캠페인", "업무명": "광고 소재 제작 (2차)", "상태": "완료", "우선순위": "긴급", "담당자": "최유진", "작성자": "박준호", "시작일": "2026-10-02", "마감일": "2026-10-25", "진척도": "100", "수정일": "2026-10-16"}, {"업무번호": "T-1013", "프로젝트": "4분기 마케팅 캠페인", "업무명": "블로그 콘텐츠 작성", "상태": "완료", "우선순위": "보통", "담당자": "정다은", "작성자": "김태윤", "시작일": "2026-10-08", "마감일": "2026-10-20", "진척도": "100", "수정일": "2026-10-20"}, {"업무번호": "T-1014", "프로젝트": "4분기 마케팅 캠페인", "업무명": "블로그 콘텐츠 작성 (2차)", "상태": "진행", "우선순위": "낮음", "담당자": "김태윤", "작성자": "한지훈", "시작일": "2026-10-08", "마감일": "2026-10-28", "진척도": "40", "수정일": "2026-10-21"}, {"업무번호": "T-1015", "프로젝트": "4분기 마케팅 캠페인", "업무명": "캠페인 성과 보고", "상태": "피드백", "우선순위": "높음", "담당자": "박준호", "작성자": "박준호", "시작일": "2026-10-10", "마감일": "2026-10-20", "진척도": "90", "수정일": "2026-10-15"}, {"업무번호": "T-1016", "프로젝트": "4분기 마케팅 캠페인", "업무명": "캠페인 성과 보고 (2차)", "상태": "보류", "우선순위": "높음", "담당자": "박준호", "작성자": "정다은", "시작일": "2026-10-02", "마감일": "2026-10-23", "진척도": "30", "수정일": "2026-10-02"}, {"업무번호": "T-1017", "프로젝트": "4분기 마케팅 캠페인", "업무명": "랜딩페이지 문구 수정", "상태": "진행", "우선순위": "보통", "담당자": "정다은", "작성자": "정다은", "시작일": "2026-10-04", "마감일": "2026-11-06", "진척도": "60", "수정일": "2026-10-21"}, {"업무번호": "T-1018", "프로젝트": "4분기 마케팅 캠페인", "업무명": "랜딩페이지 문구 수정 (2차)", "상태": "진행", "우선순위": "긴급", "담당자": "박준호", "작성자": "정다은", "시작일": "2026-10-11", "마감일": "2026-11-09", "진척도": "30", "수정일": "2026-10-13"}, {"업무번호": "T-1019", "프로젝트": "4분기 마케팅 캠페인", "업무명": "SNS 게시 일정표", "상태": "완료", "우선순위": "보통", "담당자": "한지훈", "작성자": "이서연", "시작일": "2026-10-13", "마감일": "2026-10-24", "진척도": "100", "수정일": "2026-10-24"}, {"업무번호": "T-1020", "프로젝트": "4분기 마케팅 캠페인", "업무명": "SNS 게시 일정표 (2차)", "상태": "진행", "우선순위": "낮음", "담당자": "최유진", "작성자": "정다은", "시작일": "2026-10-21", "마감일": "2026-10-27", "진척도": "60", "수정일": "2026-10-26"}, {"업무번호": "T-1021", "프로젝트": "현장 운영 관리", "업무명": "현장 안전 점검", "상태": "피드백", "우선순위": "보통", "담당자": "박준호", "작성자": "이서연", "시작일": "2026-09-26", "마감일": "2026-10-26", "진척도": "90", "수정일": "2026-09-28"}, {"업무번호": "T-1022", "프로젝트": "현장 운영 관리", "업무명": "현장 안전 점검 (2차)", "상태": "진행", "우선순위": "보통", "담당자": "한지훈", "작성자": "최유진", "시작일": "2026-09-30", "마감일": "2026-11-04", "진척도": "20", "수정일": "2026-10-06"}, {"업무번호": "T-1023", "프로젝트": "현장 운영 관리", "업무명": "자재 발주", "상태": "진행", "우선순위": "보통", "담당자": "한지훈", "작성자": "최유진", "시작일": "2026-10-06", "마감일": "2026-11-06", "진척도": "30", "수정일": "2026-10-14"}, {"업무번호": "T-1024", "프로젝트": "현장 운영 관리", "업무명": "자재 발주 (2차)", "상태": "피드백", "우선순위": "보통", "담당자": "김태윤", "작성자": "김태윤", "시작일": "2026-10-18", "마감일": "2026-11-07", "진척도": "90", "수정일": "2026-10-26"}, {"업무번호": "T-1025", "프로젝트": "현장 운영 관리", "업무명": "작업 일지 정리", "상태": "요청", "우선순위": "보통", "담당자": "박준호", "작성자": "한지훈", "시작일": "2026-09-26", "마감일": "2026-10-28", "진척도": "0", "수정일": "2026-10-03"}, {"업무번호": "T-1026", "프로젝트": "현장 운영 관리", "업무명": "협력업체 일정 확인", "상태": "완료", "우선순위": "보통", "담당자": "오세영", "작성자": "한지훈", "시작일": "2026-09-30", "마감일": "2026-10-16", "진척도": "100", "수정일": "2026-10-06"}, {"업무번호": "T-1027", "프로젝트": "현장 운영 관리", "업무명": "협력업체 일정 확인 (2차)", "상태": "진행", "우선순위": "낮음", "담당자": "이서연", "작성자": "박준호", "시작일": "2026-10-12", "마감일": "2026-11-02", "진척도": "60", "수정일": "2026-10-23"}, {"업무번호": "T-1028", "프로젝트": "현장 운영 관리", "업무명": "현장 사진 정리", "상태": "완료", "우선순위": "보통", "담당자": "최유진", "작성자": "김태윤", "시작일": "2026-10-08", "마감일": "2026-10-16", "진척도": "100", "수정일": "2026-10-26"}, {"업무번호": "T-1029", "프로젝트": "현장 운영 관리", "업무명": "현장 사진 정리 (2차)", "상태": "완료", "우선순위": "보통", "담당자": "정다은", "작성자": "박준호", "시작일": "2026-10-03", "마감일": "2026-10-18", "진척도": "100", "수정일": "2026-10-09"}, {"업무번호": "T-1030", "프로젝트": "경영지원", "업무명": "10월 비용 정산", "상태": "보류", "우선순위": "보통", "담당자": "오세영", "작성자": "박준호", "시작일": "2026-10-03", "마감일": "2026-11-07", "진척도": "10", "수정일": "2026-10-05"}, {"업무번호": "T-1031", "프로젝트": "경영지원", "업무명": "10월 비용 정산 (2차)", "상태": "진행", "우선순위": "보통", "담당자": "한지훈", "작성자": "김태윤", "시작일": "2026-10-18", "마감일": "2026-10-26", "진척도": "30", "수정일": "2026-10-22"}, {"업무번호": "T-1032", "프로젝트": "경영지원", "업무명": "법인카드 사용 내역 확인", "상태": "완료", "우선순위": "긴급", "담당자": "이서연", "작성자": "한지훈", "시작일": "2026-10-08", "마감일": "2026-10-23", "진척도": "100", "수정일": "2026-10-26"}, {"업무번호": "T-1033", "프로젝트": "경영지원", "업무명": "법인카드 사용 내역 확인 (2차)", "상태": "완료", "우선순위": "낮음", "담당자": "이서연", "작성자": "최유진", "시작일": "2026-09-30", "마감일": "2026-10-24", "진척도": "100", "수정일": "2026-10-06"}, {"업무번호": "T-1034", "프로젝트": "경영지원", "업무명": "인사 서류 정리", "상태": "피드백", "우선순위": "보통", "담당자": "이서연", "작성자": "오세영", "시작일": "2026-10-07", "마감일": "2026-10-30", "진척도": "90", "수정일": "2026-10-11"}, {"업무번호": "T-1035", "프로젝트": "경영지원", "업무명": "인사 서류 정리 (2차)", "상태": "피드백", "우선순위": "낮음", "담당자": "박준호", "작성자": "한지훈", "시작일": "2026-10-12", "마감일": "2026-11-03", "진척도": "90", "수정일": "2026-10-26"}, {"업무번호": "T-1036", "프로젝트": "경영지원", "업무명": "지원사업 서류 제출", "상태": "보류", "우선순위": "보통", "담당자": "박준호", "작성자": "박준호", "시작일": "2026-10-07", "마감일": "2026-10-28", "진척도": "30", "수정일": "2026-10-11"}, {"업무번호": "T-1037", "프로젝트": "경영지원", "업무명": "지원사업 서류 제출 (2차)", "상태": "요청", "우선순위": "높음", "담당자": "한지훈", "작성자": "한지훈", "시작일": "2026-10-08", "마감일": "2026-10-22", "진척도": "0", "수정일": "2026-10-24"}, {"업무번호": "T-1038", "프로젝트": "경영지원", "업무명": "월간 보고서 작성", "상태": "완료", "우선순위": "높음", "담당자": "김태윤", "작성자": "이서연", "시작일": "2026-09-29", "마감일": "2026-10-20", "진척도": "100", "수정일": "2026-09-30"}, {"업무번호": "T-1039", "프로젝트": "경영지원", "업무명": "월간 보고서 작성 (2차)", "상태": "진행", "우선순위": "보통", "담당자": "한지훈", "작성자": "한지훈", "시작일": "2026-10-07", "마감일": "2026-10-30", "진척도": "70", "수정일": "2026-10-26"}].map((r) => ({ ...r, 시작일: shift(r['시작일']), 마감일: shift(r['마감일']), 수정일: shift(r['수정일']) }));
-
-  // dash: 데이터와 계산
+  // ── dash: 업무 데이터와 계산 ──
   const calcs = {}, cache = {}, subs = [];
   const colors = ['var(--c0)', 'var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)', 'var(--c6)', 'var(--c7)'];
+  const store = {}; // collection -> Map(id -> data)
+  const col = (p) => (store[p] = store[p] || new Map());
   const rowsOf = (id) => {
-    if (id === 'tasks') return TASKS;
+    if (id === 'tasks') return [...col('tasks').values()].sort((a, b) => (String(a['업무번호']) < String(b['업무번호']) ? -1 : 1));
     if (cache[id]) return cache[id];
     const c = calcs[id]; if (!c) return [];
     cache[id] = c.fn(...c.inputs.map(rowsOf));
     return cache[id];
   };
+  const redraw = () => { Object.keys(cache).forEach((k) => delete cache[k]); subs.forEach((f) => { try { f(); } catch (e) { console.error(e); } }); };
   window.dash = {
     colors,
     data: (id) => { try { const d = rowsOf(id); return { status: 'ok', data: d, columns: d[0] ? Object.keys(d[0]) : [], refreshing: false, meta: [] }; } catch (e) { console.error(e); return { status: 'error', data: [], message: String(e) }; } },
@@ -450,22 +524,50 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     setLink: (name) => { try { history.replaceState(null, '', '#' + name); } catch {} },
     params: () => ({}), setParams: () => {}, resetParams: () => {}, refresh: () => {},
   };
-  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => subs.forEach((f) => { try { f(); } catch {} }), 150); });
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(redraw, 150); });
 
-  // 첨부파일: 이 브라우저 안에서만 열리는 임시 링크
-  const blobs = {};
-  window.LD_BLOB = (id) => blobs[id] || '#';
+  // ── 첨부파일: 비공개 저장소, 열 때마다 1시간짜리 임시 링크 ──
+  const signed = {};
+  const fillBlob = (id, url) => {
+    document.querySelectorAll(`a[href="#blob-${id}"]`).forEach((a) => { a.href = url; });
+    document.querySelectorAll(`img[src="#blob-${id}"]`).forEach((i) => { i.src = url; });
+  };
+  window.LD_BLOB = (id) => {
+    const c = signed[id];
+    if (c && c.until > Date.now()) return c.url;
+    if (!c || !c.pending) {
+      signed[id] = { pending: true, until: 0 };
+      sb.storage.from('attachments').createSignedUrl(id, 3600).then(({ data, error }) => {
+        if (error || !data) { signed[id] = null; return; }
+        signed[id] = { url: data.signedUrl, until: Date.now() + 50 * 60 * 1000 };
+        fillBlob(id, data.signedUrl);
+      });
+    }
+    return '#blob-' + id;
+  };
 
-  // db: 메모리 안의 간단한 저장소
-  const store = {}; const listeners = [];
-  const col = (p) => (store[p] = store[p] || new Map());
+  // ── db: Supabase 의 docs 표 하나에 모든 자료를 저장 ──
+  const listeners = [];
+  const loaded = {};
+  const load = async (path) => {
+    const { data, error } = await sb.from('docs').select('id,data').eq('collection', path).limit(5000);
+    if (error) throw { code: 'unavailable', message: error.message };
+    const m = new Map(); (data || []).forEach((r) => m.set(r.id, r.data || {}));
+    store[path] = m; loaded[path] = true;
+    listeners.filter((l) => l.path === path).forEach((l) => l.fire());
+    if (path === 'tasks') redraw();
+  };
+  const err = (error) => {
+    const msg = String(error && error.message || '');
+    // 권한 규칙(RLS)에 막히면 쓰기 권한이 없는 것으로 알립니다.
+    return { code: /row-level security|permission|violates/i.test(msg) ? 'invalid_argument' : 'unavailable', message: msg };
+  };
   const snapOf = (id, v) => ({ id, exists: !!v, data: () => (v ? JSON.parse(JSON.stringify(v)) : undefined), metadata: { fromCache: false, hasPendingWrites: false } });
-  const notify = (p) => listeners.filter((l) => l.path === p).forEach((l) => l.fire());
-  const newId = () => Math.random().toString(36).slice(2, 12) + Date.now().toString(36);
+  const newId = () => Array.from(crypto.getRandomValues(new Uint8Array(10)), (b) => b.toString(16).padStart(2, '0')).join('');
   const query = (path, ord, lim) => {
     const run = () => {
       let list = [...col(path).entries()].map(([id, v]) => ({ id, v }));
-      if (ord) list.sort((a, b) => { const x = a.v[ord.f], y = b.v[ord.f]; const r = x < y ? -1 : x > y ? 1 : 0; return ord.d === 'desc' ? -r : r; });
+      if (ord) list.sort((a, b) => { const x = a.v[ord.f] ?? '', y = b.v[ord.f] ?? ''; const r = x < y ? -1 : x > y ? 1 : 0; return ord.d === 'desc' ? -r : r; });
       if (lim) list = list.slice(0, lim);
       const docs = list.map(({ id, v }) => snapOf(id, v));
       return { docs, size: docs.length, empty: !docs.length, docChanges: () => [], metadata: { fromCache: false, hasPendingWrites: false } };
@@ -474,44 +576,121 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
       orderBy: (f, d) => query(path, { f, d }, lim),
       limit: (n) => query(path, ord, n),
       where: () => query(path, ord, lim),
-      get: async () => run(),
-      onSnapshot: (next) => { const l = { path, fire: () => setTimeout(() => next(run()), 0) }; listeners.push(l); l.fire(); return () => { const i = listeners.indexOf(l); if (i >= 0) listeners.splice(i, 1); }; },
+      get: async () => { await load(path); return run(); },
+      onSnapshot: (next, onErr) => {
+        const l = { path, fire: () => setTimeout(() => next(run()), 0) };
+        listeners.push(l);
+        if (loaded[path]) l.fire(); else load(path).catch((e) => onErr && onErr(e));
+        return () => { const i = listeners.indexOf(l); if (i >= 0) listeners.splice(i, 1); };
+      },
     };
   };
   const docRef = (path, id) => ({
     id, path: path + '/' + id,
-    get: async () => snapOf(id, col(path).get(id)),
-    set: async (v) => { col(path).set(id, JSON.parse(JSON.stringify(v))); notify(path); },
-    update: async (v) => { const cur = col(path).get(id); if (!cur) throw { code: 'invalid_argument' }; col(path).set(id, { ...cur, ...JSON.parse(JSON.stringify(v)) }); notify(path); },
-    delete: async () => { col(path).delete(id); notify(path); },
+    get: async () => { await load(path); return snapOf(id, col(path).get(id)); },
+    set: async (v) => {
+      const data = JSON.parse(JSON.stringify(v));
+      const { error } = await sb.from('docs').upsert({ collection: path, id, data, updated_at: new Date().toISOString() });
+      if (error) throw err(error);
+      col(path).set(id, data); listeners.filter((l) => l.path === path).forEach((l) => l.fire()); if (path === 'tasks') redraw();
+    },
+    update: async (v) => {
+      const cur = col(path).get(id);
+      if (!cur) throw { code: 'invalid_argument', message: 'not found' };
+      const data = { ...cur, ...JSON.parse(JSON.stringify(v)) };
+      const { error, data: rows } = await sb.from('docs').update({ data, updated_at: new Date().toISOString() }).eq('collection', path).eq('id', id).select('id');
+      if (error) throw err(error);
+      if (!rows || !rows.length) throw { code: 'invalid_argument', message: 'no permission' };
+      col(path).set(id, data); listeners.filter((l) => l.path === path).forEach((l) => l.fire()); if (path === 'tasks') redraw();
+    },
+    delete: async () => {
+      const { error, data: rows } = await sb.from('docs').delete().eq('collection', path).eq('id', id).select('id');
+      if (error) throw err(error);
+      if (!rows || !rows.length) throw { code: 'invalid_argument', message: 'no permission' };
+      col(path).delete(id); listeners.filter((l) => l.path === path).forEach((l) => l.fire()); if (path === 'tasks') redraw();
+    },
   });
   const collection = (path) => ({ path, ...query(path), doc: (id) => docRef(path, id || newId()), add: async (v) => { const r = docRef(path, newId()); await r.set(v); return r; } });
   const db = { collection, doc: (p) => { const i = p.lastIndexOf('/'); return docRef(p.slice(0, i), p.slice(i + 1)); } };
 
-  // 예시 결재 문서 한 건 (결재 대기)
-  const at = shiftIso('2026-10-26T01:15:00.000Z');
-  col('approvals').set('sample-leave-1', {
-    kind: '연차·휴가', name: '이서연', title: '[예시] 연차 신청 (2일)',
-    body: "개인 사유로 이틀간 연차를 신청합니다.\n담당 업무 중 '견적서 발송'은 박준호 님께 인계해 두었습니다.\n긴급 연락은 휴대폰으로 가능합니다.\n\n※ 결재 화면을 확인하기 위한 예시 문서입니다. 승인 또는 반려를 눌러 보세요.",
-    files: [], status: '대기', author: 'sample-user', at, updatedAt: at, sentAt: at,
-    start: shift('2026-11-03'), end: shift('2026-11-04'), amount: 0, note: '', decidedBy: null, decidedAt: '',
-  });
+  // 다른 사람이 바꾼 내용 바로 반영 (실시간 + 30초마다 확인)
+  const refreshPath = (p) => { if (loaded[p] && (listeners.some((l) => l.path === p) || p === 'tasks')) load(p).catch(() => {}); };
+  const startLive = () => {
+    sb.channel('docs-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'docs' }, (pl) => {
+        const p = (pl.new && pl.new.collection) || (pl.old && pl.old.collection);
+        if (p) refreshPath(p);
+      })
+      .subscribe();
+    setInterval(() => Object.keys(loaded).forEach(refreshPath), 30000);
+  };
 
-  const user = { id: async () => 'demo-me', canEdit: async () => true, isOwner: async () => true, can: async () => true, profiles: async () => ({}), me: async () => ({ id: 'demo-me', name: '' }) };
+  // ── 직원 정보와 권한 ──
+  let me = null; const people = {};
+  window.LD_ME = () => me;
+  window.LD_PEOPLE = () => Object.values(people);
+  window.LD_NAME = (id) => (id && people[id] ? people[id].name : '');
+  const user = {
+    id: async () => (me ? me.id : null),
+    canEdit: async () => !!me,
+    isOwner: async () => !!(me && me.role === 'approver'),
+    can: async (what) => (what === 'approve' ? !!(me && me.role === 'approver') : !!me),
+    me: async () => ({ id: me && me.id, name: me ? me.name : '' }),
+    profiles: async (ids) => { const out = {}; (ids || []).forEach((id) => { out[id] = { id, name: people[id] ? people[id].name : '' }; }); return out; },
+  };
   const assets = {
     upload: async (file, opts) => {
       const id = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
-      blobs[id] = URL.createObjectURL(file);
-      return { id, url: blobs[id], sizeBytes: file.size, contentType: (opts && opts.type) || file.type };
+      const type = (opts && opts.type) || file.type || 'application/octet-stream';
+      const { error } = await sb.storage.from('attachments').upload(id, file, { contentType: type, upsert: false });
+      if (error) throw { code: /size|large/i.test(error.message) ? 'too_large' : 'not_granted', message: error.message };
+      return { id, url: window.LD_BLOB(id), sizeBytes: file.size, contentType: type };
     },
   };
-  window.claude = { use: async (name) => ({ db, user, assets }[name] || null) };
+
+  // 로그인이 끝나야 화면이 저장소를 쓰기 시작합니다.
+  let readyResolve; const ready = new Promise((r) => { readyResolve = r; });
+  window.claude = { use: async (name) => { await ready; return ({ db, user, assets }[name] || null); } };
+
+  // ── 로그인 화면 ──
+  const gate = document.getElementById('login');
+  const root = document.getElementById('dash-root');
+  const showLogin = (msg) => { root.hidden = true; gate.hidden = false; document.getElementById('lg-msg').textContent = msg || ''; };
+  const enter = async (session) => {
+    const { data: profs, error } = await sb.from('profiles').select('id,name,title,role');
+    if (error) { showLogin('직원 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'); return; }
+    (profs || []).forEach((p) => { people[p.id] = p; });
+    me = people[session.user.id] || null;
+    if (!me) { await sb.auth.signOut(); showLogin('등록된 직원 계정이 아니에요. 관리자에게 문의해 주세요.'); return; }
+    window.LD_IS_APPROVER = me.role === 'approver';
+    document.getElementById('me-name').textContent = `${me.name}${me.title ? ' ' + me.title : ''}`;
+    document.getElementById('me-role').textContent = me.role === 'approver' ? '결재 권한' : '';
+    gate.hidden = true; root.hidden = false;
+    await load('tasks').catch(() => {});
+    startLive();
+    readyResolve();
+  };
+  document.getElementById('lg-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('lg-email').value.trim(), pw = document.getElementById('lg-pw').value;
+    const btn = document.getElementById('lg-btn'); btn.disabled = true;
+    document.getElementById('lg-msg').textContent = '로그인 중…';
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
+    btn.disabled = false;
+    if (error) { document.getElementById('lg-msg').textContent = '이메일이나 비밀번호가 맞지 않아요.'; return; }
+    try { localStorage.setItem('ld-email', email); } catch {}
+    document.getElementById('lg-pw').value = '';
+    enter(data.session);
+  });
+  document.getElementById('me-out').addEventListener('click', async () => { await sb.auth.signOut(); location.hash = ''; location.reload(); });
+  try { const em = localStorage.getItem('ld-email'); if (em) document.getElementById('lg-email').value = em; } catch {}
+  sb.auth.getSession().then(({ data }) => { if (data && data.session) enter(data.session); else showLogin(''); });
 })();
 </script>
 <script>
 window.LD = (() => {
-  const STAT = ['진행', '요청', '피드백', '보류', '완료'];
-  const color = (s) => ({ '진행': dash.colors[0], '요청': dash.colors[1], '피드백': dash.colors[2], '보류': 'var(--cds-chart-muted)', '완료': dash.colors[3] }[s] || 'var(--cds-chart-muted)');
+  const STAT = ['진행', '보류', '긴급', '완료'];
+  const color = (s) => ({ '진행': 'var(--color-fg)', '보류': 'var(--ac-2)', '긴급': 'var(--color-bad)', '완료': 'var(--color-fg-muted)' }[s] || 'var(--cds-chart-muted)');
   const pill = (text, c) => { const s = document.createElement('span'); s.className = 'pill'; s.textContent = text; s.style.color = c; s.style.background = `color-mix(in srgb, ${c} 15%, transparent)`; return s; };
   const fail = (el) => { el.replaceChildren(); const f = document.createElement('div'); f.className = 'fail'; f.textContent = 'Failed to load'; el.appendChild(f); };
   const clickable = (el, id) => {
@@ -527,7 +706,7 @@ window.LD = (() => {
 // 계산: 오늘 날짜는 페이지를 연 컴퓨터의 날짜를 씁니다.
 dash.calc('kpi', {
   title: '요약 수치',
-  description: '미완료 업무 중 마감이 지난 것, 피드백 상태인 것, 7일 안에 마감인 것을 셉니다.',
+  description: '미완료 업무 중 마감이 지난 것, 긴급인 것, 7일 안에 마감인 것을 셉니다.',
   inputs: ['tasks'],
   fn: (tasks) => {
     const now = new Date();
@@ -537,7 +716,7 @@ dash.calc('kpi', {
     const open = tasks.filter((t) => t['상태'] !== '완료');
     return [{
       지연: open.filter((t) => t['마감일'] && t['마감일'] < today).length,
-      피드백: open.filter((t) => t['상태'] === '피드백').length,
+      긴급: open.filter((t) => t['상태'] !== '보류' && t['우선순위'] === '긴급').length,
       이번주마감: open.filter((t) => t['마감일'] >= today && t['마감일'] <= week).length,
       진행중: open.length,
       전체: tasks.length,
@@ -559,22 +738,21 @@ dash.calc('task_list', {
       let tag = '';
       if (diff !== null && t['상태'] !== '완료') tag = diff < 0 ? ` · ${-diff}일 지남` : diff === 0 ? ' · 오늘' : diff <= 3 ? ` · ${diff}일 남음` : '';
       const kd = (v) => (v ? `${+String(v).slice(5, 7)}월 ${+String(v).slice(8, 10)}일` : '없음');
-      return { 업무번호: t['업무번호'], 업무명: t['업무명'], 상태: t['상태'], 우선순위: t['우선순위'], 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 마감일: d, 마감: md + tag, 남은일수: diff, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: Number(t['진척도']) || 0, 수정: kd(t['수정일']) };
+      return { 업무번호: t['업무번호'], 업무명: t['업무명'], 상태: t['상태'], 우선순위: t['우선순위'], 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: t['상태'] === '완료' ? '완료' : t['상태'] === '보류' ? '보류' : t['우선순위'] === '긴급' ? '긴급' : '진행', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: t['진척도'], 마감일: d, 마감: md + tag, 남은일수: diff, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: Number(t['진척도']) || 0, 수정: kd(t['수정일']) };
     });
   },
 });
 
 dash.calc('attention', {
   title: '먼저 확인할 업무',
-  description: '미완료 업무 중 마감이 지났거나, 피드백 상태이거나, 긴급인 것을 마감이 많이 지난 순으로 모읍니다.',
+  description: '미완료 업무 중 마감이 지났거나 긴급인 것을 마감이 많이 지난 순으로 모읍니다.',
   inputs: ['task_list'],
   fn: (task_list) => task_list
     .filter((t) => t['상태'] !== '완료')
     .map((t) => {
       const why = [];
       if (t['남은일수'] !== null && t['남은일수'] < 0) why.push('마감 지남');
-      if (t['상태'] === '피드백') why.push('검토 요청');
-      if (t['우선순위'] === '긴급') why.push('긴급');
+      if (t['우선순위'] === '긴급' && t['상태'] !== '보류') why.push('긴급');
       return { 업무번호: t['업무번호'], 업무명: t['업무명'], 담당자: t['담당자'], 사유: why.join(', '), 마감: t['마감'], 남은일수: t['남은일수'] };
     })
     .filter((r) => r['사유'])
@@ -610,8 +788,8 @@ dash.onData(() => {
   nums.forEach((el) => { el.classList.remove('dash-skeleton'); el.textContent = String(r[el.dataset.field]); });
   take.replaceChildren();
   const mk = (f, cls) => { const b = document.createElement('b'); b.textContent = String(r[f]); b.dataset.source = 'kpi'; b.dataset.field = f; b.dataset.row = '0'; if (cls) b.className = cls; return b; };
-  if (!r['지연'] && !r['피드백']) { take.append('진행 중인 업무 ', mk('진행중'), '건, 마감 지난 업무는 없습니다.'); return; }
-  take.append('진행 중인 업무 ', mk('진행중'), '건 중 마감 지난 업무 ', mk('지연', 'bad'), '건, 검토 요청 ', mk('피드백'), '건이 있습니다.');
+  if (!r['지연'] && !r['긴급']) { take.append('진행 중인 업무 ', mk('진행중'), '건, 마감 지난 업무는 없습니다.'); return; }
+  take.append('진행 중인 업무 ', mk('진행중'), '건 중 마감 지난 업무 ', mk('지연', 'bad'), '건, 긴급 업무 ', mk('긴급'), '건이 있습니다.');
 });
 </script>
 
@@ -620,8 +798,8 @@ dash.onData(() => {
 (() => {
   const OPEN = ['진행', '요청', '피드백', '보류'];
   const legend = document.getElementById('board-legend');
-  OPEN.forEach((s) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = LD.color(s); sp.append(i, s); legend.appendChild(sp); });
-  const ex = document.createElement('span'); const u = document.createElement('b'); u.className = 'urg'; u.textContent = '!'; ex.append(u, '긴급'); legend.appendChild(ex);
+  { const sp = document.createElement('span'); const i = document.createElement('i'); i.className = 'lg-dot'; sp.append(i, '진행'); legend.appendChild(sp); }
+  { const ex = document.createElement('span'); const u = document.createElement('b'); u.className = 'urg'; u.textContent = '!'; ex.append(u, '긴급'); legend.appendChild(ex); }
   const pri = { '긴급': 0, '높음': 1, '보통': 2, '낮음': 3 };
 
   dash.onData(() => {
@@ -631,6 +809,7 @@ dash.onData(() => {
     if (t.status === 'error' || p.status === 'error') return LD.fail(host);
     host.replaceChildren();
     if (t.status !== 'ok' || p.status !== 'ok') return;
+    if (!p.data.length) { const e = document.createElement('p'); e.className = 'empty'; e.style.gridColumn = '1 / -1'; e.textContent = '등록된 업무가 없어요. 오른쪽 위 [+ 업무 등록]으로 첫 업무를 등록해 보세요.'; host.appendChild(e); return; }
     for (const r of p.data) {
       const name = r['담당자'];
       const mine = t.data.filter((x) => x['담당자'] === name && x['상태'] !== '완료')
@@ -653,7 +832,6 @@ dash.onData(() => {
 
       const mix = document.createElement('div'); mix.className = 'pc-mix';
       OPEN.forEach((s) => { if (!r[s] || !r['진행중']) return; const seg = document.createElement('span'); seg.style.width = (r[s] / r['진행중']) * 100 + '%'; seg.style.background = LD.color(s); seg.title = `${s} ${r[s]}건`; mix.appendChild(seg); });
-      card.appendChild(mix);
 
       const ul = document.createElement('ul'); ul.className = 'pc-list';
       if (!mine.length) { const li = document.createElement('li'); li.className = 'none'; li.textContent = '진행 중인 업무가 없어요.'; ul.appendChild(li); }
@@ -663,12 +841,13 @@ dash.onData(() => {
         li.setAttribute('aria-label', `${x['업무명']} 자세히 보기`);
         li.addEventListener('click', () => LD.openTask(x['업무번호']));
         li.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); LD.openTask(x['업무번호']); } });
-        const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = LD.color(x['상태']);
+        const urgent = x['우선순위'] === '긴급';
+        const dot = document.createElement('span'); if (urgent) { dot.className = 'urg-mark'; dot.textContent = '!'; } else { dot.className = 'dot'; dot.style.background = 'var(--color-fg)'; }
         const mid = document.createElement('div'); mid.style.minWidth = '0';
         const tn = document.createElement('div'); tn.className = 'tn';
-        if (x['우선순위'] === '긴급') { const b = document.createElement('span'); b.className = 'urg'; b.textContent = '!'; tn.appendChild(b); }
+
         tn.append(x['업무명']);
-        const tp = document.createElement('div'); tp.className = 'tp'; tp.textContent = `${x['상태']} · ${x['프로젝트']}`;
+        const tp = document.createElement('div'); tp.className = 'tp'; tp.textContent = x['프로젝트'] ? `${x['표시']} · ${x['프로젝트']}` : x['표시']; if (x['표시'] === '긴급') tp.style.color = 'var(--color-bad)';
         mid.append(tn, tp);
         const dd = document.createElement('span'); dd.className = 'dd';
         const n = x['남은일수'];
@@ -707,7 +886,7 @@ dash.onData(() => {
     const td = (v, cls) => { const c = document.createElement('td'); c.textContent = v; if (cls) c.className = cls; tr.appendChild(c); return c; };
     td(r['업무명']);
     td(r['담당자'], 'nw');
-    td(r['사유'], 'nw ' + (r['사유'].includes('마감 지남') ? 'late' : r['사유'].includes('검토') ? 'warnc' : ''));
+    td(r['사유'], 'nw ' + (r['사유'].includes('마감 지남') ? 'late' : r['사유'].includes('긴급') ? 'late' : ''));
     td(r['마감'], 'nw' + (r['남은일수'] !== null && r['남은일수'] < 0 ? ' late' : ''));
     tb.appendChild(tr);
   }
@@ -724,8 +903,8 @@ dash.onData(() => {
   const tb = table.querySelector('tbody');
   const emptyMsg = document.getElementById('all-empty');
   const state = { status: '', sortKey: '마감일', dir: 1 };
-  const ST = { '요청': 0, '진행': 1, '피드백': 2, '보류': 3, '완료': 4 };
-  const label = { '': '전체', '피드백': '피드백(검토)' };
+  const ST = { '긴급': 0, '진행': 1, '보류': 2, '완료': 3 };
+  const label = { '': '전체' };
   const setChip = (s) => { state.status = s; chipsBox.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.s === s))); };
   ['', ...LD.STAT].forEach((s) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = label[s] || s; b.dataset.s = s;
@@ -738,7 +917,7 @@ dash.onData(() => {
   table.querySelectorAll('th button').forEach((b) => b.addEventListener('click', () => {
     const k = b.dataset.k; state.dir = state.sortKey === k ? -state.dir : 1; state.sortKey = k; draw();
   }));
-  const val = (r, k) => k === '상태' ? ST[r[k]] ?? 9 : String(r[k] ?? '');
+  const val = (r, k) => k === '상태' ? ST[r['표시']] ?? 9 : String(r[k] ?? '');
 
   function draw() {
     const d = dash.data('task_list');
@@ -754,7 +933,7 @@ dash.onData(() => {
     }
     const term = q.value.trim().toLowerCase();
     const rows = d.data
-      .filter((r) => !state.status || r['상태'] === state.status)
+      .filter((r) => !state.status || r['표시'] === state.status)
       .filter((r) => !who.value || r['담당자'] === who.value)
       .filter((r) => !term || [r['업무명'], r['담당자'], r['프로젝트']].join(' ').toLowerCase().includes(term))
       .sort((a, b) => { const x = val(a, state.sortKey), y = val(b, state.sortKey); return (x < y ? -1 : x > y ? 1 : 0) * state.dir; });
@@ -763,7 +942,7 @@ dash.onData(() => {
       const tr = document.createElement('tr'); tr.dataset.key = r['업무번호']; LD.clickable(tr, r['업무번호']);
       const td = (v, cls) => { const c = document.createElement('td'); if (v instanceof Node) c.appendChild(v); else c.textContent = v; if (cls) c.className = cls; tr.appendChild(c); return c; };
       td(r['업무명']);
-      td(LD.pill(r['상태'], LD.color(r['상태'])), 'nw');
+      td(LD.pill(r['표시'], LD.color(r['표시'])), 'nw');
       td(r['담당자'], 'nw');
       td(r['마감'], 'nw' + (r['상태'] !== '완료' && r['남은일수'] !== null && r['남은일수'] < 0 ? ' late' : ''));
       td(r['프로젝트'], 'hide-sm');
@@ -819,11 +998,11 @@ dash.onData(() => {
     if (!done && n !== null && n < 0) el.classList.add('is-late');
 
     const top = document.createElement('div'); top.className = 'dt-top';
-    top.appendChild(mark(LD.pill(r['상태'], LD.color(r['상태'])), '상태'));
+    top.appendChild(LD.pill(r['표시'], LD.color(r['표시'])));
     const pri = mark(document.createElement('span'), '우선순위'); pri.className = 'pri'; pri.textContent = r['우선순위'];
-    pri.style.color = r['우선순위'] === '긴급' ? 'var(--color-bad)' : r['우선순위'] === '높음' ? 'var(--color-warn)' : 'var(--color-fg-muted)';
+    pri.style.color = r['우선순위'] === '긴급' ? 'var(--color-bad)' : r['우선순위'] === '높음' ? 'var(--color-fg)' : 'var(--color-fg-muted)';
     const prl = document.createElement('span'); prl.style.color = 'var(--color-fg-muted)'; prl.textContent = '우선순위';
-    top.append(prl, pri);
+    void prl; void pri;
 
     const h = mark(document.createElement('h2'), '업무명'); h.textContent = r['업무명'];
 
@@ -848,7 +1027,7 @@ dash.onData(() => {
     wb.addEventListener('click', () => { LD.showPerson(r['담당자']); LD.showTab('all'); });
     who.dd.appendChild(wb);
     grid.append(who.wrap,
-      field('프로젝트', r['프로젝트'], '프로젝트', id).wrap,
+      ...(r['프로젝트'] ? [field('프로젝트', r['프로젝트'], '프로젝트', id).wrap] : []),
       field('시작일', r['시작'], '시작', id).wrap,
       field('최근 수정', r['수정'], '수정', id).wrap);
 
@@ -861,7 +1040,9 @@ dash.onData(() => {
     next.addEventListener('click', () => LD.openTask(order[i + 1], order));
     nav.append(prev, next);
 
-    el.append(top, h, due, prog, grid, nav);
+    el.append(top, h, due, prog, grid);
+    if (window.LD.detailExtras) el.appendChild(window.LD.detailExtras(r));
+    el.appendChild(nav);
   };
 
   // 같은 목록 안에서 이전/다음으로 넘길 수 있게, 클릭한 목록의 순서를 기억합니다.
@@ -1066,10 +1247,11 @@ window.LD.onApprovals = [];
 (() => {
   const $ = (id) => document.getElementById(id);
   const TYPES = { '연차': 0, '반차': 1, '출장': 2, '외근': 3, '프로젝트': 4, '회의': 5, '기타': 6 };
-  const tcolor = (t) => t === '업무 마감' ? dash.colors[7] : dash.colors[TYPES[t] ?? 6] || 'var(--cds-chart-muted)';
-  const tag = (t, cls) => { const e = document.createElement('span'); e.className = cls; e.textContent = t; const c = tcolor(t); e.style.color = c; e.style.background = `color-mix(in srgb, ${c} 16%, transparent)`; return e; };
+  const ABS = ['연차', '반차', '출장', '외근'];
+  const tcolor = (t) => t === '업무 마감' ? 'var(--cds-chart-muted)' : ABS.includes(t) ? 'var(--ac)' : 'var(--ac-2)';
+  const tag = (t, cls) => { const e = document.createElement('span'); e.className = cls; e.textContent = t; const c = tcolor(t); e.style.color = 'var(--color-fg)'; e.style.boxShadow = `inset 3px 0 0 ${c}`; e.style.background = 'var(--color-panel)'; return e; };
   const legend = $('cal-legend');
-  [...Object.keys(TYPES), '업무 마감'].forEach((t) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = tcolor(t); sp.append(i, t); legend.appendChild(sp); });
+  [['연차', '연차·반차·출장·외근'], ['회의', '프로젝트·회의·기타'], ['업무 마감', '업무 마감']].forEach(([t, label]) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = tcolor(t); sp.append(i, label); legend.appendChild(sp); });
   Object.keys(TYPES).forEach((t) => $('ev-type').appendChild(new Option(t, t)));
 
   const today = LD.iso(new Date());
@@ -1114,7 +1296,7 @@ window.LD.onApprovals = [];
         const t = document.createElement('span'); t.className = 'ev'; t.title = `${e.type} · ${label}`;
         const sw = document.createElement('i'); sw.className = 'sw'; sw.style.background = tcolor(e.type);
         t.append(sw, label);
-        t.style.background = `color-mix(in srgb, ${tcolor(e.type)} 12%, transparent)`;
+        t.style.background = 'var(--color-panel)';
         b.appendChild(t); });
       if (evs.length > MAX) { const mo = document.createElement('span'); mo.className = 'ev-more'; mo.textContent = `+${evs.length - MAX}개`; b.appendChild(mo); }
       b.setAttribute('aria-label', `${d.getMonth() + 1}월 ${d.getDate()}일, 일정 ${evs.length}개`);
@@ -1194,11 +1376,12 @@ window.LD.onApprovals = [];
   const won = (n) => (Number(n) || 0).toLocaleString('ko-KR') + '원';
   const stCls = { '초안': 'draft', '대기': 'wait', '승인': 'ok', '반려': 'no' };
   const stLabel = { '초안': '초안', '대기': '결재 대기', '승인': '승인', '반려': '반려' };
-  const kcolor = (k) => ({ '연차·휴가': dash.colors[0], '지출': dash.colors[2], '구매': dash.colors[4] }[k] || 'var(--cds-chart-muted)');
+  const kcolor = () => 'var(--color-fg-muted)';
   let cap = null, items = [], filter = '대기', cur = null, mode = 'view', files = [];
   const mine = (a) => !!(cap && cap.me && a && a.author === cap.me);
   const canWrite = () => !!(cap && cap.db && cap.canEdit !== false);
-  const who = (id, fb) => (id && cap && id === cap.me ? '나' : fb || '팀원');
+  const who = (id, fb) => (id && cap && id === cap.me ? '나' : (window.LD_NAME && LD_NAME(id)) || fb || '팀원');
+  const approverLabel = () => (window.LD_PEOPLE ? LD_PEOPLE().filter((p) => p.role === 'approver').map((p) => `${p.title ? p.title + ' ' : ''}${p.name}`).join(', ') : '') || '책임자';
   let savedName = ''; try { savedName = localStorage.getItem('ld-name') || ''; } catch {}
 
   // ── 결재함 목록 ──
@@ -1268,7 +1451,7 @@ window.LD.onApprovals = [];
     r2.append(c1, c2);
     const r3 = el('tr');
     const n1 = el('td', 'nm', a ? `${a.name || who(a.author)}${a.sentAt ? ' ' + LD.kd(a.sentAt.slice(0, 10)) : ''}` : (savedName || ' '));
-    const n2 = el('td', 'nm', a && (a.status === '승인' || a.status === '반려') ? `책임자 ${LD.kd(a.decidedAt.slice(0, 10))}` : '책임자');
+    const n2 = el('td', 'nm', a && (a.status === '승인' || a.status === '반려') ? `${(window.LD_NAME && LD_NAME(a.decidedBy)) || '책임자'} ${LD.kd(a.decidedAt.slice(0, 10))}` : approverLabel());
     r3.append(n1, n2);
     t.append(r1, r2, r3);
     return t;
@@ -1395,7 +1578,8 @@ window.LD.onApprovals = [];
     }
 
     const btns = el('div', 'doc-btns'); const msg = el('span', 'nt-msg'); msg.setAttribute('role', 'status'); btns.appendChild(msg);
-    if (a.status === '대기' && canWrite()) {
+    if (a.status === '대기' && !window.LD_IS_APPROVER) { const w = el('div', 'doc-opinion'); w.appendChild(el('h4', '', `${approverLabel()}의 결재를 기다리고 있어요.`)); box.appendChild(w); }
+    if (a.status === '대기' && canWrite() && window.LD_IS_APPROVER) {
       const op = el('div', 'doc-opinion');
       op.appendChild(el('h4', '', '책임자 결재'));
       const note = el('textarea'); note.rows = 3; note.placeholder = '의견 (선택). 반려할 때는 이유를 적어 주세요.';
@@ -1434,6 +1618,7 @@ window.LD.onApprovals = [];
   LD.cap.then((c) => {
     cap = c;
     if (!canWrite()) $('ap-new').hidden = true;
+    { const m = window.LD_ME && LD_ME(); if (m) savedName = m.name; }
     if (!c.db) { drawList(); return; }
     c.db.collection('approvals').orderBy('at', 'desc').limit(500).onSnapshot((snap) => {
       items = snap.docs.map((d) => {
@@ -1455,6 +1640,121 @@ window.LD.onApprovals = [];
 })();
 </script>
 
+<script>
+// 업무 등록 · 수정 · 삭제
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const PROG = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+  PROG.forEach((p) => $('tf-prog').appendChild(new Option(p + '%', String(p))));
+  let editId = null, from = null;
+  const today = () => LD.iso(new Date());
+  const tasks = () => { const d = dash.data('tasks'); return d.status === 'ok' ? d.data : []; };
+  const nextId = () => 'T-' + (Math.max(1000, ...tasks().map((t) => Number(String(t['업무번호']).replace(/\D/g, '')) || 0)) + 1);
+  const fillLists = () => {
+    const ts = tasks();
+    $('tf-who-list').replaceChildren(...[...new Set([...(window.LD_PEOPLE ? LD_PEOPLE().map((p) => p.name) : []), ...ts.map((t) => t['담당자'])].filter(Boolean))].sort().map((n) => new Option(n)));
+  };
+  const msg = (t) => { $('tf-msg').textContent = t || ''; };
+  // 화면에서는 진행 · 보류 · 긴급 (+ 완료) 만 씁니다.
+  const simple = (t) => (t['상태'] === '완료' ? '완료' : t['상태'] === '보류' ? '보류' : t['우선순위'] === '긴급' ? '긴급' : '진행');
+  const toFields = (st, old) => st === '긴급' ? { 상태: '진행', 우선순위: '긴급' }
+    : st === '완료' ? { 상태: '완료', 우선순위: old && old['우선순위'] !== '긴급' ? old['우선순위'] || '보통' : '보통' }
+    : { 상태: st, 우선순위: old && old['우선순위'] !== '긴급' ? old['우선순위'] || '보통' : '보통' };
+  window.LD.simpleState = simple;
+
+  const open = (id) => {
+    editId = id || null;
+    from = id ? 'detail' : (document.getElementById('page-all').hidden ? 'overview' : 'all');
+    fillLists(); msg('');
+    const t = id ? tasks().find((x) => x['업무번호'] === id) : null;
+    $('tf-title').textContent = t ? '업무 수정' : '업무 등록';
+    $('tf-name').value = t ? t['업무명'] : '';
+    $('tf-who').value = t ? t['담당자'] : '';
+    const sel = $('tf-status');
+    [...sel.options].forEach((o) => { if (o.value === '완료') o.remove(); });
+    if (t && t['상태'] === '완료') sel.appendChild(new Option('완료', '완료'));
+    sel.value = t ? simple(t) : '진행';
+    $('tf-prog').value = String(t ? Math.round((Number(t['진척도']) || 0) / 10) * 10 : 0);
+    $('tf-start').value = t ? t['시작일'] || '' : today();
+    $('tf-due').value = t ? t['마감일'] || '' : '';
+    $('tf-body').value = t ? t['내용'] || '' : '';
+    $('tf-del').hidden = !t;
+    LD.showPage('page-taskform');
+    dash.setLink(t ? 'edit-' + t['업무번호'] : 'new-task');
+    window.scrollTo({ top: 0 });
+    $('tf-name').focus();
+  };
+  const back = () => { if (editId) LD.openTask(editId, [editId]); else LD.showTab(from === 'all' ? 'all' : 'overview'); };
+  $('task-new').addEventListener('click', () => open(null));
+  $('tf-back').addEventListener('click', back);
+  $('tf-cancel').addEventListener('click', back);
+  $('tf-status').addEventListener('change', () => { if ($('tf-status').value === '완료') $('tf-prog').value = '100'; });
+
+  $('tf-save').addEventListener('click', async () => {
+    const name = $('tf-name').value.trim(), who = $('tf-who').value.trim();
+    if (!name) { msg('업무명을 적어 주세요.'); $('tf-name').focus(); return; }
+    if (!who) { msg('담당자를 적어 주세요.'); $('tf-who').focus(); return; }
+    let start = $('tf-start').value, due = $('tf-due').value;
+    if (start && due && due < start) { msg('마감일이 시작일보다 빨라요.'); $('tf-due').focus(); return; }
+    const cap = await LD.cap;
+    if (!cap.db) { msg('지금은 저장할 수 없어요.'); return; }
+    const old = editId ? tasks().find((x) => x['업무번호'] === editId) : null;
+    const id = editId || nextId();
+    const f = toFields($('tf-status').value, old);
+    const status = f['상태'];
+    const doc = {
+      업무번호: id, 프로젝트: old ? old['프로젝트'] || '' : '', 업무명: name, 상태: status, 우선순위: f['우선순위'],
+      담당자: who, 작성자: old ? old['작성자'] || '' : '', 시작일: start || today(), 마감일: due,
+      진척도: status === '완료' ? '100' : $('tf-prog').value, 수정일: today(), 내용: $('tf-body').value.trim(),
+    };
+    $('tf-save').disabled = true; msg('저장하는 중…');
+    try {
+      await cap.db.collection('tasks').doc(id).set(doc);
+      $('tf-save').disabled = false;
+      LD.openTask(id, [id]);
+    } catch (e) { $('tf-save').disabled = false; msg('저장하지 못했어요. 잠시 후 다시 해 주세요.'); }
+  });
+
+  $('tf-del').addEventListener('click', async () => {
+    if (!editId) return;
+    const t = tasks().find((x) => x['업무번호'] === editId);
+    if (!confirm(`'${t ? t['업무명'] : editId}' 업무를 삭제할까요? 되돌릴 수 없어요.`)) return;
+    const cap = await LD.cap;
+    try { await cap.db.collection('tasks').doc(editId).delete(); editId = null; LD.showTab('all'); }
+    catch { msg('삭제하지 못했어요.'); }
+  });
+
+  // 상세 화면: 업무 내용, 상태 바로 바꾸기, 수정 버튼
+  window.LD.detailExtras = (r) => {
+    const box = document.createElement('div'); box.className = 'dt-act';
+    if (r['내용']) {
+      const l = document.createElement('div'); l.className = 'lbl'; l.textContent = '업무 내용';
+      const p = document.createElement('p'); p.className = 'dt-body'; p.textContent = r['내용'];
+      box.append(l, p);
+    }
+    const l2 = document.createElement('div'); l2.className = 'lbl'; l2.textContent = '상태 바로 바꾸기';
+    const row = document.createElement('div'); row.className = 'row';
+    const cur = simple(r);
+    ['진행', '보류', '긴급', '완료'].forEach((st) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'st-btn'; b.textContent = st;
+      b.setAttribute('aria-pressed', String(cur === st));
+      b.addEventListener('click', async () => {
+        if (cur === st) return;
+        const cap = await LD.cap; if (!cap.db) return;
+        const upd = { ...toFields(st, r), 수정일: today() };
+        if (st === '완료') upd['진척도'] = '100';
+        try { await cap.db.collection('tasks').doc(r['업무번호']).update(upd); } catch { alert('바꾸지 못했어요.'); }
+      });
+      row.appendChild(b);
+    });
+    const ed = document.createElement('button'); ed.type = 'button'; ed.className = 'edit-btn'; ed.textContent = '✏️ 업무 수정';
+    ed.addEventListener('click', () => open(r['업무번호']));
+    row.appendChild(ed);
+    box.append(l2, row);
+    return box;
+  };
+})();
+</script>
 </div>
 </body>
 </html>
