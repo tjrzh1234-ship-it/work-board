@@ -41,6 +41,12 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .lg-box button[disabled]{opacity:.5}
 .lg-msg{margin:0;min-height:1.4em;color:var(--color-bad);font-size:1.05rem}
 .lg-help{margin:0;color:var(--color-fg-muted);font-size:.95rem}
+.lg-msg.ok{color:var(--color-fg)}
+.lg-links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+.lg-box .lg-link{all:unset;cursor:pointer;font-size:1.05rem;color:var(--color-fg-muted);text-decoration:underline;text-underline-offset:3px}
+.lg-box .lg-link:hover{color:var(--color-fg)}
+.lg-box .lg-link:focus-visible{outline:2px solid var(--color-fg)}
+.lg-box [hidden]{display:none!important}
 .dash-skeleton{color:transparent!important;background:var(--cds-chart-grid);border-radius:6px;min-width:3rem;display:inline-block}
 .demo-bar{background:var(--color-panel);color:var(--color-fg-muted);border-bottom:1px solid var(--color-border-line);padding:10px 16px;font-size:15px;text-align:center;line-height:1.5}
 
@@ -48,14 +54,22 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 </head>
 <body>
 <div id="login" class="login" hidden>
-  <form id="lg-form" class="lg-box" autocomplete="on">
+  <form id="lg-form" class="lg-box" autocomplete="on" novalidate>
     <h1>업무 현황판</h1>
-    <p class="lg-sub">직원 계정으로 로그인해 주세요.</p>
-    <label>이메일<input id="lg-email" type="email" autocomplete="username" required></label>
-    <label>비밀번호<input id="lg-pw" type="password" autocomplete="current-password" required></label>
+    <p class="lg-sub" id="lg-sub">직원 계정으로 로그인해 주세요.</p>
+    <label data-f="name">이름<input id="lg-name" autocomplete="name" placeholder="예: 홍길동"></label>
+    <label data-f="title">직책<input id="lg-title" placeholder="예: 사원, 실장"></label>
+    <label data-f="email">이메일<input id="lg-email" type="email" autocomplete="username"></label>
+    <label data-f="pw">비밀번호<input id="lg-pw" type="password" autocomplete="current-password"></label>
+    <label data-f="pw2">비밀번호 확인<input id="lg-pw2" type="password" autocomplete="new-password"></label>
     <button id="lg-btn" type="submit">로그인</button>
     <p class="lg-msg" id="lg-msg" role="status"></p>
-    <p class="lg-help">계정이 없거나 비밀번호를 잊으셨으면 관리자에게 문의해 주세요.</p>
+    <div class="lg-links">
+      <button type="button" class="lg-link" data-go="signup">가입 신청</button>
+      <button type="button" class="lg-link" data-go="reset">비밀번호 찾기</button>
+      <button type="button" class="lg-link" data-go="login">로그인 화면으로</button>
+      <button type="button" class="lg-link" data-go="logout">로그아웃</button>
+    </div>
   </form>
 </div>
 <div id="dash-root" hidden>
@@ -216,6 +230,28 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .st-btn:hover{border-color:var(--color-fg)}
 .edit-btn{font:inherit;font-size:1.1rem;font-weight:700;background:var(--color-bg);color:var(--color-fg);border:1px solid var(--color-fg);border-radius:var(--cds-radius);padding:.5rem 1.3rem;cursor:pointer;margin-left:auto}
 @media (max-width:640px){.tab-add{margin-left:0;width:100%;margin-top:.4rem}}
+/* 직원 관리 */
+.sf-list{display:flex;flex-direction:column;gap:.8rem}
+.sf-card{background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.8rem}
+.sf-card.pending{border:2px solid var(--color-fg)}
+.sf-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem 1rem}
+.sf-top .who{font-size:1.3rem;font-weight:700}
+.sf-top .sub{color:var(--color-fg-muted);font-size:1.02rem}
+.sf-top .tag{margin-left:auto;font-size:.95rem;border:1px solid var(--color-fg);border-radius:999px;padding:.05rem .7rem;white-space:nowrap}
+.sf-perm{display:flex;flex-direction:column;gap:.7rem;border-top:1px solid var(--color-border-line);padding-top:.8rem}
+.sf-perm .row{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-size:1.1rem}
+.sf-perm .lbl{min-width:6.5rem;font-weight:600}
+.sf-perm label{display:inline-flex;align-items:center;gap:.35rem;cursor:pointer}
+.sf-perm input[type=radio],.sf-perm input[type=checkbox]{width:1.15rem;height:1.15rem;accent-color:var(--color-fg)}
+.sf-pick{display:flex;flex-wrap:wrap;gap:.4rem .9rem;padding:.6rem .8rem;background:var(--color-panel);border-radius:8px;margin-left:7.5rem}
+.sf-btns{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.sf-btns .nt-msg{margin-right:auto}
+.sf-btn{font:inherit;font-size:1.05rem;background:var(--color-bg);color:var(--color-fg);border:1px solid var(--color-border-line);border-radius:8px;padding:.45rem 1.1rem;cursor:pointer}
+.sf-btn.main{background:var(--color-fg);color:var(--color-bg);border-color:var(--color-fg);font-weight:700}
+.sf-btn.danger{color:var(--color-bad);border-color:currentColor}
+.sf-edit{all:unset;cursor:pointer;font-size:1rem;text-decoration:underline;color:var(--color-fg-muted)}
+.sf-pick[hidden]{display:none}
+@media (max-width:640px){.sf-pick{margin-left:0}}
 /* 탭 배지 */
 .tab-badge[hidden]{display:none}
 .tab-badge{display:inline-block;min-width:1.4rem;margin-left:.35rem;padding:0 .4rem;border-radius:999px;background:var(--color-bad);color:var(--color-bg);font-size:.9rem;font-weight:700;line-height:1.4rem;text-align:center}
@@ -331,6 +367,7 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     <button class="ld-tab" role="tab" id="all" data-page="page-all" aria-selected="false">전체 업무</button>
     <button class="ld-tab" role="tab" id="cal" data-page="page-cal" aria-selected="false">일정</button>
     <button class="ld-tab" role="tab" id="appr" data-page="page-appr" aria-selected="false">결재<span class="tab-badge" id="appr-badge" hidden></span></button>
+    <button class="ld-tab" role="tab" id="staff" data-page="page-staff" aria-selected="false" hidden>직원 관리<span class="tab-badge" id="staff-badge" hidden></span></button>
     <button type="button" class="tab-add" id="task-new">+ 업무 등록</button>
   </nav>
 
@@ -484,6 +521,19 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     </section>
   </div>
 
+  <div class="ld-page" id="page-staff" role="tabpanel" hidden>
+    <section class="ld-card">
+      <h2>가입 신청</h2>
+      <p class="nt-hint" style="margin:-.4rem 0 1rem">승인할 때 이 직원의 권한을 정해 주세요. 나중에 직원 목록에서 언제든 바꿀 수 있어요.</p>
+      <div class="sf-list" id="sf-pending"></div>
+    </section>
+    <section class="ld-card">
+      <h2>직원 목록</h2>
+      <div class="sf-list" id="sf-active"></div>
+      <p class="nt-hint">퇴사 처리하면 그 직원은 바로 접속할 수 없어요. 그 직원이 쓴 업무와 결재 기록은 남아요.</p>
+    </section>
+  </div>
+
   <div class="ld-page" id="page-apdoc" hidden>
     <button type="button" class="back" id="doc-back">← 결재함으로</button>
     <article class="doc" id="doc"></article>
@@ -495,8 +545,8 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 // ── Supabase 연결: 로그인 · 권한 · 저장 ──
 // 아래 두 값만 Supabase 프로젝트 값으로 바꿔 넣으세요.
 // (Supabase → Project Settings → API 에 있는 Project URL 과 anon public key)
-const SUPABASE_URL = 'https://여기에-프로젝트-주소.supabase.co';
-const SUPABASE_ANON_KEY = '여기에-anon-public-키';
+const SUPABASE_URL = 'https://ysjwrnblpxpjozanhior.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_WXbAHGbo9QrRDtSO8LmXnA_UiapON2B';
 
 (() => {
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -628,13 +678,16 @@ const SUPABASE_ANON_KEY = '여기에-anon-public-키';
   // ── 직원 정보와 권한 ──
   let me = null; const people = {};
   window.LD_ME = () => me;
-  window.LD_PEOPLE = () => Object.values(people);
+  window.LD_PEOPLE = () => Object.values(people).filter((p) => p.status === 'active');
+  const canApproveFor = (p, author) => !!(p && p.status === 'active' && author && p.id !== author && (p.approve_all || (p.approve_for || []).includes(author)));
+  window.LD_CAN_APPROVE = (author) => canApproveFor(me, author);
+  window.LD_APPROVERS_FOR = (author) => Object.values(people).filter((p) => canApproveFor(p, author));
   window.LD_NAME = (id) => (id && people[id] ? people[id].name : '');
   const user = {
     id: async () => (me ? me.id : null),
     canEdit: async () => !!me,
-    isOwner: async () => !!(me && me.role === 'approver'),
-    can: async (what) => (what === 'approve' ? !!(me && me.role === 'approver') : !!me),
+    isOwner: async () => !!(me && me.can_manage),
+    can: async (what) => (what === 'manage' ? !!(me && me.can_manage) : !!me),
     me: async () => ({ id: me && me.id, name: me ? me.name : '' }),
     profiles: async (ids) => { const out = {}; (ids || []).forEach((id) => { out[id] = { id, name: people[id] ? people[id].name : '' }; }); return out; },
   };
@@ -652,39 +705,127 @@ const SUPABASE_ANON_KEY = '여기에-anon-public-키';
   let readyResolve; const ready = new Promise((r) => { readyResolve = r; });
   window.claude = { use: async (name) => { await ready; return ({ db, user, assets }[name] || null); } };
 
-  // ── 로그인 화면 ──
-  const gate = document.getElementById('login');
-  const root = document.getElementById('dash-root');
-  const showLogin = (msg) => { root.hidden = true; gate.hidden = false; document.getElementById('lg-msg').textContent = msg || ''; };
+  // ── 로그인 · 가입 신청 화면 ──
+  const $ = (id) => document.getElementById(id);
+  const gate = $('login'), root = $('dash-root');
+  const here = location.origin + location.pathname;
+  const MODES = {
+    login:   { sub: '직원 계정으로 로그인해 주세요.', f: ['email', 'pw'], btn: '로그인', links: ['signup', 'reset'] },
+    signup:  { sub: '가입 신청을 하면 관리자가 확인 후 승인해 드려요.', f: ['name', 'title', 'email', 'pw', 'pw2'], btn: '가입 신청', links: ['login'] },
+    apply:   { sub: '이름과 직책을 적어 가입 신청을 마쳐 주세요.', f: ['name', 'title'], btn: '가입 신청', links: ['logout'] },
+    pending: { sub: '가입 신청이 접수됐어요. 관리자가 승인하면 바로 이용할 수 있어요.', f: [], btn: '승인됐는지 다시 확인', links: ['logout'] },
+    reset:   { sub: '가입한 이메일로 비밀번호 재설정 메일을 보내 드려요.', f: ['email'], btn: '재설정 메일 보내기', links: ['login'] },
+    newpw:   { sub: '새 비밀번호를 정해 주세요.', f: ['pw', 'pw2'], btn: '비밀번호 바꾸기', links: [] },
+  };
+  let mode = 'login';
+  const say = (t, ok) => { $('lg-msg').textContent = t || ''; $('lg-msg').classList.toggle('ok', !!ok); };
+  const setMode = (m, msg, ok) => {
+    mode = m; const M = MODES[m];
+    $('lg-sub').textContent = M.sub;
+    document.querySelectorAll('#lg-form [data-f]').forEach((l) => { l.hidden = !M.f.includes(l.dataset.f); });
+    document.querySelectorAll('#lg-form [data-go]').forEach((b) => { b.hidden = !M.links.includes(b.dataset.go); });
+    $('lg-btn').textContent = M.btn;
+    $('lg-pw').autocomplete = m === 'login' ? 'current-password' : 'new-password';
+    say(msg, ok);
+  };
+  const showLogin = (m, msg, ok) => { root.hidden = true; gate.hidden = false; setMode(m || 'login', msg, ok); };
+  document.querySelectorAll('#lg-form [data-go]').forEach((b) => b.addEventListener('click', async () => {
+    if (b.dataset.go === 'logout') { await sb.auth.signOut(); setMode('login'); return; }
+    setMode(b.dataset.go);
+  }));
+
+  const loadPeople = async () => {
+    const { data: profs, error } = await sb.from('profiles').select('id,name,title,email,status,can_manage,approve_all,approve_for,created_at');
+    if (error) throw error;
+    Object.keys(people).forEach((k) => delete people[k]);
+    (profs || []).forEach((p) => { people[p.id] = { ...p, approve_for: p.approve_for || [] }; });
+  };
+  window.LD_ALL_PROFILES = () => Object.values(people);
+  window.LD_RELOAD_PEOPLE = async () => { await loadPeople(); me = me ? people[me.id] || me : me; redraw(); };
+  const roleText = (p) => [p.approve_all ? '결재(전체)' : (p.approve_for || []).length ? `결재(${p.approve_for.length}명)` : '', p.can_manage ? '직원 관리' : ''].filter(Boolean).join(' · ');
+  window.LD_ROLE_TEXT = roleText;
+  const applyProfile = async (uid, email) => {
+    const name = $('lg-name').value.trim(), title = $('lg-title').value.trim();
+    const { error } = await sb.from('profiles').insert({ id: uid, name, title, email, status: 'pending' });
+    if (error && !/duplicate|unique/i.test(error.message)) throw error;
+  };
+
+  let entered = false;
   const enter = async (session) => {
-    const { data: profs, error } = await sb.from('profiles').select('id,name,title,role');
-    if (error) { showLogin('직원 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'); return; }
-    (profs || []).forEach((p) => { people[p.id] = p; });
+    try { await loadPeople(); } catch { showLogin('login', '직원 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'); return; }
     me = people[session.user.id] || null;
-    if (!me) { await sb.auth.signOut(); showLogin('등록된 직원 계정이 아니에요. 관리자에게 문의해 주세요.'); return; }
-    window.LD_IS_APPROVER = me.role === 'approver';
-    document.getElementById('me-name').textContent = `${me.name}${me.title ? ' ' + me.title : ''}`;
-    document.getElementById('me-role').textContent = me.role === 'approver' ? '결재 권한' : '';
+    if (!me) { showLogin('apply', '아직 가입 신청이 없는 계정이에요.'); return; }
+    if (me.status !== 'active') { showLogin('pending'); return; }
+    $('me-name').textContent = `${me.name}${me.title ? ' ' + me.title : ''}`;
+    $('me-role').textContent = roleText(me);
+    const st = $('staff'); if (st) st.hidden = !me.can_manage;
     gate.hidden = true; root.hidden = false;
+    if (entered) return; entered = true;
     await load('tasks').catch(() => {});
     startLive();
     readyResolve();
   };
-  document.getElementById('lg-form').addEventListener('submit', async (e) => {
+
+  $('lg-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('lg-email').value.trim(), pw = document.getElementById('lg-pw').value;
-    const btn = document.getElementById('lg-btn'); btn.disabled = true;
-    document.getElementById('lg-msg').textContent = '로그인 중…';
-    const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
-    btn.disabled = false;
-    if (error) { document.getElementById('lg-msg').textContent = '이메일이나 비밀번호가 맞지 않아요.'; return; }
-    try { localStorage.setItem('ld-email', email); } catch {}
-    document.getElementById('lg-pw').value = '';
-    enter(data.session);
+    const email = $('lg-email').value.trim().toLowerCase(), pw = $('lg-pw').value, pw2 = $('lg-pw2').value, name = $('lg-name').value.trim();
+    const F = MODES[mode].f;
+    const need = (cond, msg, el) => { if (!cond) { say(msg); if (el) $(el).focus(); } return cond; };
+    if (F.includes('name') && !need(name.length >= 2, '이름을 적어 주세요.', 'lg-name')) return;
+    if (F.includes('email') && !need(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email), '이메일을 정확히 적어 주세요.', 'lg-email')) return;
+    if (F.includes('pw') && !need(pw.length >= (mode === 'login' ? 1 : 8), mode === 'login' ? '비밀번호를 적어 주세요.' : '비밀번호는 8자 이상으로 정해 주세요.', 'lg-pw')) return;
+    if (F.includes('pw2') && !need(pw === pw2, '비밀번호 확인이 달라요.', 'lg-pw2')) return;
+    const btn = $('lg-btn'); btn.disabled = true; say('잠시만요…', true);
+    try {
+      if (mode === 'login') {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
+        if (error) { say(/confirm/i.test(error.message) ? '메일 인증이 끝나지 않은 계정이에요. 관리자에게 문의해 주세요.' : '이메일이나 비밀번호가 맞지 않아요.'); return; }
+        try { localStorage.setItem('ld-email', email); } catch {}
+        $('lg-pw').value = '';
+        await enter(data.session);
+      } else if (mode === 'signup') {
+        const { data, error } = await sb.auth.signUp({ email, password: pw, options: { emailRedirectTo: here } });
+        if (error) { say(/registered|exists/i.test(error.message) ? '이미 가입한 이메일이에요. 로그인해 주세요.' : '가입 신청을 하지 못했어요: ' + error.message); return; }
+        try { localStorage.setItem('ld-email', email); } catch {}
+        $('lg-pw').value = ''; $('lg-pw2').value = '';
+        if (!data.session) { setMode('login', '메일 인증이 필요하게 설정되어 있어요. 관리자에게 문의해 주세요.'); return; }
+        await applyProfile(data.session.user.id, email);
+        await enter(data.session);
+      } else if (mode === 'apply') {
+        const { data } = await sb.auth.getSession();
+        if (!data.session) { setMode('login'); return; }
+        await applyProfile(data.session.user.id, data.session.user.email || '');
+        await enter(data.session);
+      } else if (mode === 'pending') {
+        const { data } = await sb.auth.getSession();
+        if (!data.session) { setMode('login'); return; }
+        await enter(data.session);
+        if (mode === 'pending') say('아직 승인 전이에요. 관리자에게 승인을 요청해 주세요.');
+      } else if (mode === 'reset') {
+        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: here });
+        if (error) { say(/not_authorized|not authorized|rate/i.test(error.message) ? '지금은 메일을 보낼 수 없어요. 관리자에게 문의해 주세요.' : '메일을 보내지 못했어요: ' + error.message); return; }
+        say('재설정 메일을 보냈어요. 메일의 링크를 눌러 새 비밀번호를 정해 주세요.', true);
+      } else if (mode === 'newpw') {
+        const { error } = await sb.auth.updateUser({ password: pw });
+        if (error) { say('비밀번호를 바꾸지 못했어요: ' + error.message); return; }
+        $('lg-pw').value = ''; $('lg-pw2').value = '';
+        history.replaceState(null, '', here);
+        const { data } = await sb.auth.getSession();
+        if (data.session) await enter(data.session); else setMode('login', '비밀번호를 바꿨어요. 새 비밀번호로 로그인해 주세요.', true);
+      }
+    } catch (err) { say('처리하지 못했어요. 잠시 후 다시 해 주세요.'); }
+    finally { btn.disabled = false; }
   });
-  document.getElementById('me-out').addEventListener('click', async () => { await sb.auth.signOut(); location.hash = ''; location.reload(); });
-  try { const em = localStorage.getItem('ld-email'); if (em) document.getElementById('lg-email').value = em; } catch {}
-  sb.auth.getSession().then(({ data }) => { if (data && data.session) enter(data.session); else showLogin(''); });
+
+  $('me-out').addEventListener('click', async () => { await sb.auth.signOut(); location.hash = ''; location.reload(); });
+  try { const em = localStorage.getItem('ld-email'); if (em) $('lg-email').value = em; } catch {}
+  const recovering = /type=recovery/.test(location.hash);
+  sb.auth.onAuthStateChange((ev) => { if (ev === 'PASSWORD_RECOVERY') showLogin('newpw'); });
+  sb.auth.getSession().then(({ data }) => {
+    if (recovering) showLogin('newpw');
+    else if (data && data.session) enter(data.session);
+    else showLogin('login');
+  });
 })();
 </script>
 <script>
@@ -1381,7 +1522,7 @@ window.LD.onApprovals = [];
   const mine = (a) => !!(cap && cap.me && a && a.author === cap.me);
   const canWrite = () => !!(cap && cap.db && cap.canEdit !== false);
   const who = (id, fb) => (id && cap && id === cap.me ? '나' : (window.LD_NAME && LD_NAME(id)) || fb || '팀원');
-  const approverLabel = () => (window.LD_PEOPLE ? LD_PEOPLE().filter((p) => p.role === 'approver').map((p) => `${p.title ? p.title + ' ' : ''}${p.name}`).join(', ') : '') || '책임자';
+  const approverLabel = (author) => (window.LD_APPROVERS_FOR ? LD_APPROVERS_FOR(author).map((p) => `${p.title ? p.title + ' ' : ''}${p.name}`).join(', ') : '') || '결재권자';
   let savedName = ''; try { savedName = localStorage.getItem('ld-name') || ''; } catch {}
 
   // ── 결재함 목록 ──
@@ -1451,7 +1592,7 @@ window.LD.onApprovals = [];
     r2.append(c1, c2);
     const r3 = el('tr');
     const n1 = el('td', 'nm', a ? `${a.name || who(a.author)}${a.sentAt ? ' ' + LD.kd(a.sentAt.slice(0, 10)) : ''}` : (savedName || ' '));
-    const n2 = el('td', 'nm', a && (a.status === '승인' || a.status === '반려') ? `${(window.LD_NAME && LD_NAME(a.decidedBy)) || '책임자'} ${LD.kd(a.decidedAt.slice(0, 10))}` : approverLabel());
+    const n2 = el('td', 'nm', a && (a.status === '승인' || a.status === '반려') ? `${(window.LD_NAME && LD_NAME(a.decidedBy)) || '책임자'} ${LD.kd(a.decidedAt.slice(0, 10))}` : approverLabel(a && a.author));
     r3.append(n1, n2);
     t.append(r1, r2, r3);
     return t;
@@ -1578,8 +1719,8 @@ window.LD.onApprovals = [];
     }
 
     const btns = el('div', 'doc-btns'); const msg = el('span', 'nt-msg'); msg.setAttribute('role', 'status'); btns.appendChild(msg);
-    if (a.status === '대기' && !window.LD_IS_APPROVER) { const w = el('div', 'doc-opinion'); w.appendChild(el('h4', '', `${approverLabel()}의 결재를 기다리고 있어요.`)); box.appendChild(w); }
-    if (a.status === '대기' && canWrite() && window.LD_IS_APPROVER) {
+    if (a.status === '대기' && !LD_CAN_APPROVE(a.author)) { const w = el('div', 'doc-opinion'); w.appendChild(el('h4', '', `${approverLabel(a.author)}의 결재를 기다리고 있어요.`)); box.appendChild(w); }
+    if (a.status === '대기' && canWrite() && LD_CAN_APPROVE(a.author)) {
       const op = el('div', 'doc-opinion');
       op.appendChild(el('h4', '', '책임자 결재'));
       const note = el('textarea'); note.rows = 3; note.placeholder = '의견 (선택). 반려할 때는 이유를 적어 주세요.';
@@ -1753,6 +1894,102 @@ window.LD.onApprovals = [];
     box.append(l2, row);
     return box;
   };
+})();
+</script>
+<script>
+// 직원 관리: 가입 승인 · 권한 · 퇴사 (직원 관리 권한이 있는 사람만)
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  let openEdit = null;
+  const fmt = (iso) => (iso ? `${new Date(iso).getMonth() + 1}월 ${new Date(iso).getDate()}일 신청` : '');
+
+  // 권한 정하기: 결재(없음/전체/일부 선택) + 직원 관리
+  const permEditor = (p, onSave, saveLabel, extraBtns) => {
+    const box = mk('div', 'sf-perm');
+    const others = LD_PEOPLE().filter((x) => x.id !== p.id).sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    const gid = 'ap-' + p.id;
+    const r1 = mk('div', 'row'); r1.appendChild(mk('span', 'lbl', '결재 권한'));
+    const opt = (v, t) => { const l = mk('label'); const r = mk('input'); r.type = 'radio'; r.name = gid; r.value = v; l.append(r, t); r1.appendChild(l); return r; };
+    const rNone = opt('none', '없음'), rAll = opt('all', '전체 직원'), rSome = opt('some', '일부 직원만');
+    const pick = mk('div', 'sf-pick');
+    const checks = others.map((o) => { const l = mk('label'); const c = mk('input'); c.type = 'checkbox'; c.value = o.id; c.checked = (p.approve_for || []).includes(o.id); l.append(c, `${o.name}${o.title ? ' ' + o.title : ''}`); pick.appendChild(l); return c; });
+    if (!others.length) pick.appendChild(mk('span', 'sub', '아직 승인된 다른 직원이 없어요.'));
+    (p.approve_all ? rAll : (p.approve_for || []).length ? rSome : rNone).checked = true;
+    const sync = () => { pick.hidden = !rSome.checked; };
+    [rNone, rAll, rSome].forEach((r) => r.addEventListener('change', sync)); sync();
+    const r2 = mk('div', 'row'); r2.appendChild(mk('span', 'lbl', '직원 관리'));
+    const ml = mk('label'); const mc = mk('input'); mc.type = 'checkbox'; mc.checked = !!p.can_manage; ml.append(mc, '가입 승인 · 권한 수정 · 퇴사 처리'); r2.appendChild(ml);
+    const btns = mk('div', 'sf-btns'); const msg = mk('span', 'nt-msg');
+    const save = mk('button', 'sf-btn main', saveLabel); save.type = 'button';
+    save.addEventListener('click', async () => {
+      const ids = checks.filter((c) => c.checked).map((c) => c.value);
+      if (rSome.checked && !ids.length) { msg.textContent = '결재할 직원을 한 명 이상 골라 주세요.'; return; }
+      save.disabled = true; msg.textContent = '저장하는 중…';
+      const ok = await onSave({ approve_all: rAll.checked, approve_for: rSome.checked ? ids : [], can_manage: mc.checked }, msg);
+      save.disabled = false; if (ok) msg.textContent = '';
+    });
+    btns.append(msg, ...(extraBtns || []), save);
+    box.append(r1, pick, r2, btns);
+    return box;
+  };
+
+  const update = async (id, patch, msg) => {
+    const { data, error } = await LD_SB.from('profiles').update(patch).eq('id', id).select('id');
+    if (error || !data || !data.length) { if (msg) msg.textContent = '저장하지 못했어요. 권한을 확인해 주세요.'; return false; }
+    await LD_RELOAD_PEOPLE(); draw(); return true;
+  };
+  const remove = async (p, what) => {
+    if (!confirm(what === 'reject' ? `${p.name} 님의 가입 신청을 거절할까요?` : `${p.name} 님을 퇴사 처리할까요? 바로 접속할 수 없게 됩니다.`)) return;
+    const { data, error } = await LD_SB.from('profiles').delete().eq('id', p.id).select('id');
+    if (error || !data || !data.length) { alert('처리하지 못했어요.'); return; }
+    await LD_RELOAD_PEOPLE(); draw();
+  };
+
+  const head = (p, tagText) => {
+    const top = mk('div', 'sf-top');
+    top.append(mk('span', 'who', `${p.name}${p.title ? ' ' + p.title : ''}`), mk('span', 'sub', p.email || ''));
+    if (tagText) top.appendChild(mk('span', 'tag', tagText));
+    return top;
+  };
+
+  function draw() {
+    const meNow = LD_ME(); if (!meNow || !meNow.can_manage) return;
+    const all = LD_ALL_PROFILES();
+    const pend = all.filter((p) => p.status === 'pending').sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)));
+    const act = all.filter((p) => p.status === 'active').sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    const badge = $('staff-badge'); badge.hidden = !pend.length; badge.textContent = String(pend.length);
+
+    const pbox = $('sf-pending'); pbox.replaceChildren();
+    if (!pend.length) pbox.appendChild(mk('p', 'nt-empty', '새 가입 신청이 없어요.'));
+    for (const p of pend) {
+      const card = mk('div', 'sf-card pending');
+      const top = head(p); top.appendChild(mk('span', 'sub', fmt(p.created_at)));
+      const rej = mk('button', 'sf-btn danger', '거절'); rej.type = 'button'; rej.addEventListener('click', () => remove(p, 'reject'));
+      card.append(top, permEditor(p, (perm, msg) => update(p.id, { ...perm, status: 'active' }, msg), '승인', [rej]));
+      pbox.appendChild(card);
+    }
+
+    const abox = $('sf-active'); abox.replaceChildren();
+    for (const p of act) {
+      const isMe = p.id === meNow.id;
+      const card = mk('div', 'sf-card');
+      const top = head(p, LD_ROLE_TEXT(p) || '일반 직원');
+      card.appendChild(top);
+      if (isMe) { top.appendChild(mk('span', 'sub', '(나)')); abox.appendChild(card); continue; }
+      const ed = mk('button', 'sf-edit', openEdit === p.id ? '닫기' : '권한 수정'); ed.type = 'button';
+      ed.addEventListener('click', () => { openEdit = openEdit === p.id ? null : p.id; draw(); });
+      top.appendChild(ed);
+      if (openEdit === p.id) {
+        const out = mk('button', 'sf-btn danger', '퇴사 처리'); out.type = 'button'; out.addEventListener('click', () => remove(p, 'out'));
+        card.appendChild(permEditor(p, async (perm, msg) => { const ok = await update(p.id, perm, msg); if (ok) { openEdit = null; draw(); } return ok; }, '권한 저장', [out]));
+      }
+      abox.appendChild(card);
+    }
+  }
+  window.LD_DRAW_STAFF = draw;
+  document.getElementById('staff').addEventListener('click', async () => { await LD_RELOAD_PEOPLE(); draw(); });
+  LD.cap.then(() => { draw(); setInterval(async () => { const m = LD_ME(); if (m && m.can_manage && document.getElementById('page-staff').hidden) { await LD_RELOAD_PEOPLE(); draw(); } }, 60000); });
 })();
 </script>
 </div>
