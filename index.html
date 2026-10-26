@@ -378,6 +378,12 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .ap-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
 .ap-top h2{margin:0}
 .ap-top .nt-send{margin-left:0}
+.ap-tile{font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.ap-tile:hover,.ap-tile[aria-expanded="true"]{border-color:var(--color-fg)}
+.ap-tile:focus-visible{outline:2px solid var(--color-fg)}
+.ap-tile-hint{font-size:1rem;color:var(--color-fg-muted);margin-top:.3rem}
+.ap-tile[aria-expanded="true"] .ap-tile-hint{color:var(--color-fg)}
+.ap-pop{border:2px solid var(--color-fg)}
 .ap-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.8rem}
 .ap{border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg)}
 .ap.wait{border-left:5px solid var(--color-warn)}
@@ -589,9 +595,12 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 
   <div class="ld-page" id="page-appr" role="tabpanel" hidden>
     <section class="ld-tiles" aria-label="결재 요약">
-      <div class="ld-tile warn"><div class="lbl">결재 대기</div><div class="val"><span class="num" id="ap-wait">—</span><span class="unit">건</span></div></div>
-      <div class="ld-tile"><div class="lbl">작성 중인 초안</div><div class="val"><span class="num" id="ap-draft">—</span><span class="unit">건</span></div></div>
-      <div class="ld-tile"><div class="lbl">이번 달 승인</div><div class="val"><span class="num" id="ap-ok">—</span><span class="unit">건</span></div></div>
+      <button type="button" class="ld-tile warn ap-tile" data-pop="wait" aria-expanded="false"><div class="lbl">결재 대기</div><div class="val"><span class="num" id="ap-wait">—</span><span class="unit">건</span></div><div class="ap-tile-hint">눌러서 목록 보기 ▾</div></button>
+      <button type="button" class="ld-tile ap-tile" data-pop="ok" aria-expanded="false"><div class="lbl">이번 달 승인</div><div class="val"><span class="num" id="ap-ok">—</span><span class="unit">건</span></div><div class="ap-tile-hint">눌러서 목록 보기 ▾</div></button>
+    </section>
+    <section class="ld-card ap-pop" id="ap-pop" hidden>
+      <div class="ap-top"><h2 id="ap-pop-title"></h2><button type="button" class="btn-line" id="ap-pop-close">닫기</button></div>
+      <ul class="ap-list" id="ap-pop-list"></ul>
     </section>
     <section class="ld-card">
       <div class="ap-top">
@@ -1667,8 +1676,8 @@ window.LD.onApprovals = [];
 
   // ── 결재함 목록 ──
   const chips = $('ap-chips');
-  ['대기', '초안', '승인', '반려', '전체'].forEach((s) => {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.s = s; b.textContent = s === '대기' ? '결재 대기' : s === '초안' ? '내 초안' : s;
+  ['대기', '승인', '반려', '전체'].forEach((s) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.s = s; b.textContent = s === '대기' ? '결재 대기' : s === '승인' ? '결재 완료' : s;
     b.addEventListener('click', () => { filter = s; drawList(); });
     chips.appendChild(b);
   });
@@ -1679,14 +1688,36 @@ window.LD.onApprovals = [];
     const ym = LD.iso(new Date()).slice(0, 7);
     const wait = items.filter((a) => a.status === '대기').length;
     $('ap-wait').textContent = String(wait);
-    $('ap-draft').textContent = String(items.filter((a) => a.status === '초안' && mine(a)).length);
-    $('ap-ok').textContent = String(items.filter((a) => a.status === '승인' && a.decidedAt.slice(0, 7) === ym).length);
+    const okMonth = items.filter((a) => a.status === '승인' && a.decidedAt.slice(0, 7) === ym);
+    $('ap-ok').textContent = String(okMonth.length);
+    drawPop(items.filter((a) => a.status === '대기'), okMonth);
     const mine4me = items.filter((a) => a.status === '대기' && canDecide(a)).length;
     const badge = $('appr-badge'); badge.hidden = !mine4me; badge.textContent = String(mine4me);
     const ul = $('ap-list'); ul.replaceChildren();
     const rows = visible().filter((a) => filter === '전체' || a.status === filter);
-    if (!rows.length) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = { '대기': '기다리는 결재가 없어요.', '초안': '작성 중인 초안이 없어요.' }[filter] || '해당하는 문서가 없어요.'; ul.appendChild(li); return; }
-    for (const a of rows) {
+    if (!rows.length) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = { '대기': '기다리는 결재가 없어요.', '승인': '결재 완료된 문서가 없어요.' }[filter] || '해당하는 문서가 없어요.'; ul.appendChild(li); return; }
+    for (const a of rows) ul.appendChild(rowOf(a));
+  }
+
+  // 위 요약 칸을 누르면 그 목록을 펼쳐 보여 줌
+  let pop = null;
+  document.querySelectorAll('.ap-tile').forEach((t) => t.addEventListener('click', () => { pop = pop === t.dataset.pop ? null : t.dataset.pop; drawList(); }));
+  $('ap-pop-close').addEventListener('click', () => { pop = null; drawList(); });
+  function drawPop(waitRows, okRows) {
+    document.querySelectorAll('.ap-tile').forEach((t) => {
+      const on = t.dataset.pop === pop; t.setAttribute('aria-expanded', String(on));
+      t.querySelector('.ap-tile-hint').textContent = on ? '목록 닫기 ▴' : '눌러서 목록 보기 ▾';
+    });
+    const box = $('ap-pop'); box.hidden = !pop; if (!pop) return;
+    const rows = pop === 'wait' ? waitRows : okRows;
+    $('ap-pop-title').textContent = pop === 'wait' ? `결재 대기 ${rows.length}건` : `이번 달 승인 ${rows.length}건`;
+    const ul = $('ap-pop-list'); ul.replaceChildren();
+    if (!rows.length) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = pop === 'wait' ? '기다리는 결재가 없어요.' : '이번 달 승인된 문서가 없어요.'; ul.appendChild(li); return; }
+    for (const a of rows) ul.appendChild(rowOf(a));
+  }
+
+  function rowOf(a) {
+    {
       const li = document.createElement('li'); li.className = 'ap' + (a.status === '대기' ? ' wait' : '');
       const row = document.createElement('button'); row.type = 'button'; row.className = 'ap-row';
       const mid = document.createElement('div'); mid.style.minWidth = '0';
@@ -1698,7 +1729,7 @@ window.LD.onApprovals = [];
       const st = document.createElement('span'); st.className = 'ap-st ' + (stCls[a.status] || ''); st.textContent = stLabel[a.status];
       row.append(LD.pill(a.kind, kcolor(a.kind)), mid, st);
       row.addEventListener('click', () => openDoc(a.id, 'view'));
-      li.appendChild(row); ul.appendChild(li);
+      li.appendChild(row); return li;
     }
   }
 
@@ -1827,7 +1858,7 @@ window.LD.onApprovals = [];
           else { const ref = await cap.db.collection('approvals').add(doc); id = ref.id; }
           try { localStorage.setItem('ld-name', n); savedName = n; } catch {}
           files = [];
-          filter = status === '대기' ? '대기' : '초안';
+          filter = status === '대기' ? '대기' : '전체';
           cur = id; mode = 'view';
           if (!items.find((x) => x.id === id)) items = [{ id, ...doc, files: up }, ...items];
           drawDoc();
