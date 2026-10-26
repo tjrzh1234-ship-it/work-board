@@ -252,6 +252,37 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .sf-edit{all:unset;cursor:pointer;font-size:1rem;text-decoration:underline;color:var(--color-fg-muted)}
 .sf-pick[hidden]{display:none}
 @media (max-width:640px){.sf-pick{margin-left:0}}
+/* 문의 접수함 */
+.iq-list{display:flex;flex-direction:column;gap:.8rem}
+.iq{background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius)}
+.iq.new{border:2px solid var(--color-bad)}
+.iq-row{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:auto 1fr auto;gap:.4rem 1rem;align-items:center;padding:1rem 1.2rem;cursor:pointer}
+.iq-row:focus-visible{outline:2px solid var(--color-fg)}
+.iq-kind{font-size:.95rem;font-weight:700;border:1px solid var(--color-fg);border-radius:999px;padding:.1rem .7rem;white-space:nowrap}
+.iq-main{min-width:0}
+.iq-name{font-size:1.25rem;font-weight:700}
+.iq-name small{font-size:1rem;font-weight:400;color:var(--color-fg-muted);margin-left:.5rem}
+.iq-sub{font-size:1.02rem;color:var(--color-fg-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:.15rem}
+.iq-right{text-align:right;white-space:nowrap}
+.iq-st{font-size:1.1rem;font-weight:700}
+.iq-st.new{color:var(--color-bad)}
+.iq-when{font-size:.95rem;color:var(--color-fg-muted)}
+.iq-detail{padding:0 1.2rem 1.2rem;display:flex;flex-direction:column;gap:1rem}
+.iq-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.8rem 1.6rem;margin:0}
+.iq-facts div{border-top:1px solid var(--color-border-line);padding-top:.5rem}
+.iq-facts dt{font-size:.95rem;color:var(--color-fg-muted)}
+.iq-facts dd{margin:.15rem 0 0;font-size:1.2rem;font-weight:600;overflow-wrap:anywhere}
+.iq-facts a{color:var(--color-fg)}
+.iq-msg{font-size:1.15rem;white-space:pre-wrap;line-height:1.7;background:var(--color-panel);border-radius:8px;padding:.9rem 1.1rem;margin:0;overflow-wrap:anywhere}
+.iq-edit{display:flex;flex-direction:column;gap:.7rem;border-top:1px solid var(--color-border-line);padding-top:1rem}
+.iq-edit .row{display:flex;flex-wrap:wrap;gap:.8rem}
+.iq-edit label{display:flex;flex-direction:column;gap:.3rem;font-size:1rem;color:var(--color-fg-muted);flex:1 1 12rem}
+.iq-edit input,.iq-edit select,.iq-edit textarea{font:inherit;font-size:1.15rem;color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:8px;padding:.5rem .7rem}
+.iq-edit textarea{resize:vertical;min-height:5rem}
+.ld .iq-edit > label{flex:none}
+.iq-btns{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.iq-btns .nt-msg{margin-right:auto}
+@media (max-width:640px){.iq-row{grid-template-columns:1fr auto}.iq-row .iq-kind{display:none}}
 /* 탭 배지 */
 .tab-badge[hidden]{display:none}
 .tab-badge{display:inline-block;min-width:1.4rem;margin-left:.35rem;padding:0 .4rem;border-radius:999px;background:var(--color-bad);color:var(--color-bg);font-size:.9rem;font-weight:700;line-height:1.4rem;text-align:center}
@@ -367,6 +398,7 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     <button class="ld-tab" role="tab" id="all" data-page="page-all" aria-selected="false">전체 업무</button>
     <button class="ld-tab" role="tab" id="cal" data-page="page-cal" aria-selected="false">일정</button>
     <button class="ld-tab" role="tab" id="appr" data-page="page-appr" aria-selected="false">결재<span class="tab-badge" id="appr-badge" hidden></span></button>
+    <button class="ld-tab" role="tab" id="inq" data-page="page-inq" aria-selected="false">문의 접수함<span class="tab-badge" id="inq-badge" hidden></span></button>
     <button class="ld-tab" role="tab" id="staff" data-page="page-staff" aria-selected="false" hidden>직원 관리<span class="tab-badge" id="staff-badge" hidden></span></button>
     <button type="button" class="tab-add" id="task-new">+ 업무 등록</button>
   </nav>
@@ -518,6 +550,21 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
       </div>
       <div class="ld-tools" id="ap-chips"></div>
       <ul class="ap-list" id="ap-list"></ul>
+    </section>
+  </div>
+
+  <div class="ld-page" id="page-inq" role="tabpanel" hidden>
+    <section class="ld-tiles" aria-label="문의 요약">
+      <div class="ld-tile"><div class="lbl">새 문의</div><div class="val"><span class="num" id="iq-new" style="color:var(--color-bad)">—</span><span class="unit">건</span></div></div>
+      <div class="ld-tile"><div class="lbl">상담 진행 중</div><div class="val"><span class="num" id="iq-doing">—</span><span class="unit">건</span></div></div>
+      <div class="ld-tile"><div class="lbl">이번 달 계약</div><div class="val"><span class="num" id="iq-won">—</span><span class="unit">건</span></div></div>
+    </section>
+    <section class="ld-card">
+      <h2>문의 접수함</h2>
+      <div class="ld-tools" id="iq-kinds"></div>
+      <div class="ld-tools" id="iq-chips"></div>
+      <div class="iq-list" id="iq-list"></div>
+      <p class="nt-hint">홈페이지에서 들어온 문의예요. 구글 시트와 메일 알림도 지금처럼 함께 받아요.</p>
     </section>
   </div>
 
@@ -1210,7 +1257,7 @@ dash.onData(() => {
   dash.onData(draw);
 
   const named = location.hash.slice(1);
-  if (['all', 'cal', 'appr'].includes(named)) show(named, false);
+  if (['all', 'cal', 'appr', 'inq'].includes(named)) show(named, false);
   else if (named.startsWith('task-')) { current = decodeURIComponent(named.slice(5)); order = [current]; showPage('page-detail'); draw(); window.LD.pendingNotes = current; }
 })();
 </script>
@@ -1990,6 +2037,131 @@ window.LD.onApprovals = [];
   window.LD_DRAW_STAFF = draw;
   document.getElementById('staff').addEventListener('click', async () => { await LD_RELOAD_PEOPLE(); draw(); });
   LD.cap.then(() => { draw(); setInterval(async () => { const m = LD_ME(); if (m && m.can_manage && document.getElementById('page-staff').hidden) { await LD_RELOAD_PEOPLE(); draw(); } }, 60000); });
+})();
+</script>
+<script>
+// 문의 접수함: 홈페이지 견적문의 · 파트너스 · 폐업지원금
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const STATUS = ['신규', '상담 중', '견적 발송', '계약', '종료'];
+  const KINDS = ['견적문의', '파트너스', '폐업지원금'];
+  let items = [], st = '진행 중', kind = '전체', openId = null, loaded = false;
+  const when = (iso) => { const d = new Date(iso); if (isNaN(d)) return ''; const p = (x) => String(x).padStart(2, '0'); return `${d.getMonth() + 1}월 ${d.getDate()}일 ${p(d.getHours())}:${p(d.getMinutes())}`; };
+  const telHref = (p) => 'tel:' + String(p || '').replace(/[^0-9+]/g, '');
+
+  const chipRow = (box, list, cur, set) => {
+    box.replaceChildren();
+    list.forEach((v) => { const b = mk('button', 'chip', v); b.type = 'button'; b.setAttribute('aria-pressed', String(v === cur)); b.addEventListener('click', () => { set(v); draw(); }); box.appendChild(b); });
+  };
+
+  const load = async () => {
+    const { data, error } = await LD_SB.from('inquiries').select('*').order('created_at', { ascending: false }).limit(500);
+    if (error) { if (!loaded) { $('iq-list').replaceChildren(mk('p', 'nt-empty', '문의를 불러오지 못했어요. 문의 접수함 설정(SQL)을 실행했는지 확인해 주세요.')); } return; }
+    items = data || []; loaded = true; draw();
+  };
+
+  const save = async (it, patch, msgEl) => {
+    const { data, error } = await LD_SB.from('inquiries').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', it.id).select('*');
+    if (error || !data || !data.length) { if (msgEl) msgEl.textContent = '저장하지 못했어요.'; return false; }
+    Object.assign(it, data[0]); draw(); return true;
+  };
+
+  const toTask = async (it, assignee, msgEl) => {
+    const cap = await LD.cap; if (!cap.db) return;
+    const ts = dash.data('tasks'); const rows = ts.status === 'ok' ? ts.data : [];
+    const id = 'T-' + (Math.max(1000, ...rows.map((t) => Number(String(t['업무번호']).replace(/\D/g, '')) || 0)) + 1);
+    const today = LD.iso(new Date());
+    const me = LD_ME();
+    const who = assignee || (me ? me.name : '');
+    const body = [`[${it.kind}] ${when(it.created_at)} 접수`, `고객: ${it.name} / ${it.phone}`, it.category ? `유형: ${it.category}` : '', it.address ? `주소: ${it.address}` : '', it.message ? `내용: ${it.message}` : ''].filter(Boolean).join('\n');
+    const doc = { 업무번호: id, 프로젝트: it.kind, 업무명: `${it.kind} - ${it.name}${it.category ? ' · ' + it.category : ''}`, 상태: '진행', 우선순위: '보통', 담당자: who, 작성자: '', 시작일: today, 마감일: '', 진척도: '0', 수정일: today, 내용: body };
+    try {
+      await cap.db.collection('tasks').doc(id).set(doc);
+      await save(it, { task_id: id, status: it.status === '신규' ? '상담 중' : it.status, assignee: who }, msgEl);
+      if (confirm('업무로 등록했어요. 그 업무를 열어 볼까요?')) LD.openTask(id, [id]);
+    } catch { if (msgEl) msgEl.textContent = '업무로 등록하지 못했어요.'; }
+  };
+
+  function draw() {
+    const ym = LD.iso(new Date()).slice(0, 7);
+    const nNew = items.filter((x) => x.status === '신규').length;
+    $('iq-new').textContent = String(nNew);
+    $('iq-doing').textContent = String(items.filter((x) => ['상담 중', '견적 발송'].includes(x.status)).length);
+    $('iq-won').textContent = String(items.filter((x) => x.status === '계약' && String(x.updated_at).slice(0, 7) === ym).length);
+    const badge = $('inq-badge'); badge.hidden = !nNew; badge.textContent = String(nNew);
+    chipRow($('iq-kinds'), ['전체', ...KINDS], kind, (v) => { kind = v; });
+    chipRow($('iq-chips'), ['진행 중', ...STATUS, '전체'], st, (v) => { st = v; });
+
+    const list = $('iq-list'); list.replaceChildren();
+    const rows = items.filter((x) => (kind === '전체' || x.kind === kind) && (st === '전체' || (st === '진행 중' ? x.status !== '종료' && x.status !== '계약' : x.status === st)));
+    if (!rows.length) { list.appendChild(mk('p', 'nt-empty', loaded ? '해당하는 문의가 없어요.' : '불러오는 중…')); return; }
+    for (const it of rows) {
+      const card = mk('div', 'iq' + (it.status === '신규' ? ' new' : ''));
+      const row = mk('button', 'iq-row'); row.type = 'button'; row.setAttribute('aria-expanded', String(openId === it.id));
+      const main = mk('div', 'iq-main');
+      const nm = mk('div', 'iq-name', it.name); nm.appendChild(mk('small', '', it.phone));
+      main.append(nm, mk('div', 'iq-sub', [it.category, it.address, it.message].filter(Boolean).join(' · ') || '내용 없음'));
+      const right = mk('div', 'iq-right');
+      right.append(mk('div', 'iq-st' + (it.status === '신규' ? ' new' : ''), it.status), mk('div', 'iq-when', when(it.created_at)));
+      row.append(mk('span', 'iq-kind', it.kind), main, right);
+      row.addEventListener('click', () => { openId = openId === it.id ? null : it.id; draw(); });
+      card.appendChild(row);
+
+      if (openId === it.id) {
+        const det = mk('div', 'iq-detail');
+        const facts = mk('dl', 'iq-facts');
+        const fact = (k, v) => { if (!v) return; const w = mk('div'); w.appendChild(mk('dt', '', k)); const dd = mk('dd'); if (v instanceof Node) dd.appendChild(v); else dd.textContent = v; w.appendChild(dd); facts.appendChild(w); };
+        fact('성함', it.name);
+        const tel = mk('a', '', it.phone); tel.href = telHref(it.phone); fact('연락처 (누르면 전화)', tel);
+        fact(it.kind === '견적문의' ? '철거 유형' : '구분', it.category);
+        fact('주소', it.address);
+        fact('접수', `${when(it.created_at)}${it.source ? ' · ' + it.source : ''}`);
+        Object.entries(it.extra || {}).forEach(([k, v]) => fact(k, String(v)));
+        det.appendChild(facts);
+        if (it.message) det.appendChild(mk('p', 'iq-msg', it.message));
+
+        const ed = mk('div', 'iq-edit');
+        const r1 = mk('div', 'row');
+        const l1 = mk('label', '', '처리 상태'); const sel = mk('select'); STATUS.forEach((v) => sel.appendChild(new Option(v, v))); sel.value = it.status; l1.appendChild(sel);
+        const l2 = mk('label', '', '담당자'); const who = mk('input'); who.value = it.assignee || ''; who.setAttribute('list', 'iq-who-list'); who.placeholder = '이름 입력 또는 선택'; l2.appendChild(who);
+        r1.append(l1, l2);
+        const l3 = mk('label', '', '상담 메모'); const memo = mk('textarea'); memo.value = it.memo || ''; memo.placeholder = '통화 내용, 견적 금액, 방문 일정 등을 적어 두세요'; l3.appendChild(memo);
+        const btns = mk('div', 'iq-btns'); const msg = mk('span', 'nt-msg');
+        const sv = mk('button', 'nt-send', '저장'); sv.type = 'button'; sv.style.marginLeft = '0';
+        sv.addEventListener('click', async () => { sv.disabled = true; msg.textContent = '저장하는 중…'; const ok = await save(it, { status: sel.value, assignee: who.value.trim(), memo: memo.value.trim() }, msg); sv.disabled = false; if (ok) msg.textContent = ''; });
+        btns.appendChild(msg);
+        if (it.task_id) { const go = mk('button', 'sf-btn', '연결된 업무 보기'); go.type = 'button'; go.addEventListener('click', () => LD.openTask(it.task_id, [it.task_id])); btns.appendChild(go); }
+        else { const tk = mk('button', 'sf-btn', '업무로 등록'); tk.type = 'button'; tk.addEventListener('click', () => toTask(it, who.value.trim(), msg)); btns.appendChild(tk); }
+        const me = LD_ME();
+        if (me && me.can_manage) {
+          const del = mk('button', 'sf-btn danger', '삭제'); del.type = 'button';
+          del.addEventListener('click', async () => {
+            if (!confirm(`${it.name} 님의 문의를 삭제할까요? 개인정보가 함께 지워지고 되돌릴 수 없어요.`)) return;
+            const { data, error } = await LD_SB.from('inquiries').delete().eq('id', it.id).select('id');
+            if (error || !data || !data.length) { msg.textContent = '삭제하지 못했어요.'; return; }
+            items = items.filter((x) => x.id !== it.id); openId = null; draw();
+          });
+          btns.appendChild(del);
+        }
+        btns.appendChild(sv);
+        ed.append(r1, l3, btns);
+        det.appendChild(ed);
+        card.appendChild(det);
+      }
+      list.appendChild(card);
+    }
+    let dl = $('iq-who-list');
+    if (!dl) { dl = mk('datalist'); dl.id = 'iq-who-list'; document.body.appendChild(dl); }
+    dl.replaceChildren(...LD_PEOPLE().map((p) => new Option(p.name)));
+  }
+
+  $('inq').addEventListener('click', load);
+  LD.cap.then(() => {
+    load();
+    try { LD_SB.channel('inq-live').on('postgres_changes', { event: '*', schema: 'public', table: 'inquiries' }, () => { if (!openId) load(); }).subscribe(); } catch {}
+    setInterval(() => { if (!openId) load(); }, 60000);
+  });
 })();
 </script>
 </div>
