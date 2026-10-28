@@ -444,6 +444,10 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .sr-list textarea{width:100%}
 .sr-inl{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .5rem}
 .sr-inl input{width:9rem}.sr-inl input.w2{width:15rem}
+.sr-req{color:var(--color-bad);font-style:normal;font-weight:800}
+.sr-reqnote{margin:-.4rem 0 0;font-size:1rem;color:var(--color-fg-muted)}
+.sr-miss{outline:3px solid var(--color-bad);outline-offset:3px;border-radius:6px}
+.sr-alert{margin:0;padding:.8rem 1rem;border:2px solid var(--color-bad);border-radius:6px;background:var(--color-bg);color:var(--color-bad);font-weight:700;font-size:1.1rem}
 .sr-tip{margin:0;font-size:1rem;color:var(--color-fg-muted)}
 .srv-t{min-width:820px}
 .srv-t td{padding:.6rem .6rem;white-space:pre-wrap;overflow-wrap:anywhere}
@@ -597,17 +601,19 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
             <div><div class="sr-h1">일일 영업활동 및 외근 방문 보고서</div><div class="sr-h2">주식회사 유니온원 (UNION ONE) · 영업 1·2파트 개별 직보 양식</div></div>
             <div class="sr-tag">[대표님 1:1 직보 문서]<br>실무자 기명 · 대리보고 금지</div>
           </div>
+          <p class="sr-alert" id="sr-alert" role="alert" hidden></p>
           <div class="sr-info">
-            <div class="sr-f"><b>보고일자</b><input type="date" id="sr-date" min="2000-01-01" max="2099-12-31"><span id="sr-dow"></span></div>
-            <div class="sr-f"><b>소속/성명</b>
+            <div class="sr-f" id="sr-f-date"><b>보고일자 <i class="sr-req">*</i></b><input type="date" id="sr-date" min="2000-01-01" max="2099-12-31"><span id="sr-dow"></span></div>
+            <div class="sr-f" id="sr-f-part"><b>소속/성명 <i class="sr-req">*</i></b>
               <label class="sr-chk"><input type="radio" name="sr-part" id="sr-p1" value="영업1파트(최원찬 이사)"><span>영업1파트(최원찬 이사)</span></label>
               <label class="sr-chk"><input type="radio" name="sr-part" id="sr-p2" value="영업2파트(김한빈)"><span>영업2파트(김한빈)</span></label>
             </div>
             <div class="sr-f"><b>외근시간</b><input type="time" id="sr-from" aria-label="외근 시작"> ~ <input type="time" id="sr-to" aria-label="외근 종료"></div>
             <div class="sr-f"><b>당일 요약</b>방문 (<input class="sr-n" id="sr-visit" inputmode="numeric" aria-label="방문 곳 수">)곳 · 견적제출 (<input class="sr-n" id="sr-quote" inputmode="numeric" aria-label="견적 제출 건수">)건 · 수주확정 (<input class="sr-won" id="sr-won" inputmode="numeric" aria-label="수주 확정 금액">)원</div>
           </div>
-          <div class="sr-sec"><h3>1. 시간대별 외근 방문 및 대면 영업 상세 일지</h3><span class="sr-note">※ 사무실 내근·컴퓨터 작업 기재 금지 / 실제 방문 업체 및 면담자 실명 필수 기록</span></div>
-          <div class="sr-tw"><table class="sr-t">
+          <div class="sr-sec"><h3>1. 시간대별 외근 방문 및 대면 영업 상세 일지 <i class="sr-req">*</i></h3><span class="sr-note">※ 사무실 내근·컴퓨터 작업 기재 금지 / 실제 방문 업체 및 면담자 실명 필수 기록</span></div>
+          <p class="sr-reqnote"><i class="sr-req">*</i> 표시는 꼭 채워 주세요. 방문 내용은 한 줄 이상 적으면 돼요.</p>
+          <div class="sr-tw" id="sr-tw"><table class="sr-t">
             <thead><tr><th>방문 시간</th><th>타깃 사업분류</th><th>방문 업체명 · 현장 위치</th><th>면담자 (직책·연락처)</th><th>상담 결과 및 제출 견적액</th><th>증빙 첨부</th></tr></thead>
             <tbody id="sr-rows"></tbody>
           </table></div>
@@ -1776,7 +1782,7 @@ window.LD.onApprovals = [];
     if (d.status !== 'ok') return [];
     return d.data.filter((t) => t['상태'] !== '완료' && !['회의록', '영업보고서'].includes(t['구분']) && t['마감일']).map((t) => ({ id: 't-' + t['업무번호'], type: '업무 마감', title: t['업무명'], who: t['담당자'], start: t['마감일'], end: t['마감일'], task: t['업무번호'] }));
   };
-  const all = () => [...events, ...leaveFromApprovals(), ...taskEvents()];
+  const all = () => { const have = new Set(events.map((e) => e.id)); return [...events, ...leaveFromApprovals().filter((e) => !have.has(e.id)), ...taskEvents()]; };
   const on = (list, day) => list.filter((e) => e.start <= day && (e.end || e.start) >= day)
     .sort((a, b) => (TYPES[a.type] ?? 9) - (TYPES[b.type] ?? 9));
 
@@ -1868,7 +1874,7 @@ window.LD.onApprovals = [];
     if (!c.db || c.canEdit === false) { $('ev-form').hidden = true; $('ev-ro').hidden = false; }
     if (!c.db) return;
     c.db.collection('schedule').limit(5000).onSnapshot((snap) => {
-      events = snap.docs.map((d) => { const v = d.data() || {}; return { id: d.id, type: String(v.type || '기타'), who: String(v.who || ''), title: String(v.title || ''), start: String(v.start || ''), end: String(v.end || v.start || ''), author: v.author }; }).filter((e) => /^\d{4}-\d{2}-\d{2}$/.test(e.start));
+      events = snap.docs.map((d) => { const v = d.data() || {}; return { id: d.id, type: String(v.type || '기타'), who: String(v.who || ''), title: String(v.title || ''), start: String(v.start || ''), end: String(v.end || v.start || ''), author: v.author, fromAppr: !!v.fromAppr }; }).filter((e) => /^\d{4}-\d{2}-\d{2}$/.test(e.start));
       redraw();
     }, () => {});
   });
@@ -1910,7 +1916,8 @@ window.LD.onApprovals = [];
   const visible = () => items.filter((a) => a.status !== '초안' || mine(a));
 
   function drawChips() {
-    const staff = (window.LD_PEOPLE ? LD_PEOPLE() : []).slice().sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    const meP = window.LD_ME ? LD_ME() : null;
+    const staff = (window.LD_PEOPLE ? LD_PEOPLE() : []).filter((p) => (meP && (meP.see_overview || p.id === meP.id)) || LD_CAN_APPROVE(p.id)).sort((a, b) => a.name.localeCompare(b.name, 'ko'));
     if (person && !staff.some((p) => p.id === person) && !items.some((a) => a.author === person)) person = null;
     chips.replaceChildren(...staff.map((p) => {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'chip';
@@ -1951,6 +1958,18 @@ window.LD.onApprovals = [];
     const rows = his.filter((a) => a.status === filter).sort((a, b) => ((b.decidedAt || b.sentAt || b.at) || '').localeCompare((a.decidedAt || a.sentAt || a.at) || ''));
     if (!rows.length) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = { '대기': '결재 대기 중인 문서가 없어요.', '승인': '결재 완료된 문서가 없어요.', '반려': '반려된 문서가 없어요.' }[filter] || '해당하는 문서가 없어요.'; ul.appendChild(li); return; }
     for (const a of rows) ul.appendChild(rowOf(a));
+  }
+
+  // 승인된 연차는 결재 문서와 별도로 달력(일정)에 이름·날짜만 적어 둬요. 결재 문서는 비공개라 다른 직원은 못 보기 때문이에요.
+  const mirrored = new Set();
+  async function mirrorLeave(a, onlyIfMissing) {
+    if (!a || a.status !== '승인' || a.kind !== '연차·휴가' || !a.start || mirrored.has(a.id)) return;
+    mirrored.add(a.id);
+    try {
+      const ref = cap.db.collection('schedule').doc('ap-' + a.id);
+      if (onlyIfMissing) { const snap = await ref.get(); if (snap.exists) return; }
+      await ref.set({ type: '연차', who: a.name || (window.LD_NAME && LD_NAME(a.author)) || '', title: '연차·휴가', start: a.start, end: a.end || a.start, author: a.author, fromAppr: true });
+    } catch { mirrored.delete(a.id); }
   }
 
   // ── 결재 현황판 (대표님·전무님용) ──
@@ -2227,7 +2246,10 @@ window.LD.onApprovals = [];
       const decide = async (status) => {
         if (!confirm(`이 문서를 ${status}할까요?`)) return;
         ok.disabled = no.disabled = true;
-        try { await cap.db.collection('approvals').doc(a.id).update({ status, note: note.value.trim(), decidedBy: cap.me || null, decidedAt: new Date().toISOString() }); }
+        try {
+          await cap.db.collection('approvals').doc(a.id).update({ status, note: note.value.trim(), decidedBy: cap.me || null, decidedAt: new Date().toISOString() });
+          if (status === '승인') mirrorLeave({ ...a, status });
+        }
         catch (e) { msg.textContent = e && (e.code === 'invalid_argument' || e.code === 'not_granted') ? '결재할 권한이 없어요.' : '저장하지 못했어요.'; ok.disabled = no.disabled = false; }
       };
       ok.addEventListener('click', () => decide('승인'));
@@ -2267,6 +2289,7 @@ window.LD.onApprovals = [];
           start: date(v.start), end: date(v.end), amount: Number(v.amount) || 0, files: Array.isArray(v.files) ? v.files : [], note: String(v.note || ''), approver: String(v.approver || ''), decidedBy: v.decidedBy, decidedAt: String(v.decidedAt || '') };
       });
       LD.approvals = items;
+      items.forEach((a) => { if (a.status === '승인' && (a.author === cap.me || LD_CAN_APPROVE(a.author))) mirrorLeave(a, true); });
       LD.onApprovals.forEach((f) => f());
       drawList();
       if (cur && mode === 'view' && !document.getElementById('page-apdoc').hidden) drawDoc();
@@ -2334,8 +2357,8 @@ window.LD.onApprovals = [];
   $('sr-quote').addEventListener('input', () => { $('sr-quote').value = numOnly($('sr-quote').value); });
   ['sr-won', 'sr-q-amt'].forEach((id) => $(id).addEventListener('input', () => { $(id).value = comma($(id).value); }));
   $('sr-date').addEventListener('change', () => { const d = $('sr-date').value; $('sr-dow').textContent = d ? `(${dowOf(d)}요일)` : ''; });
-  $('tf-sales').addEventListener('input', () => msg(''));
-  $('tf-sales').addEventListener('change', () => msg(''));
+  $('tf-sales').addEventListener('input', () => { msg(''); salesMiss(null); });
+  $('tf-sales').addEventListener('change', () => { msg(''); salesMiss(null); });
   $('sr-add').addEventListener('click', () => { addRow({}); const r = $('sr-rows').lastElementChild; r.querySelector('.r-time').focus(); });
   const fillSales = (rep, who) => {
     rep = rep || {};
@@ -2501,11 +2524,23 @@ window.LD.onApprovals = [];
     } catch (e) { $('tf-save').disabled = false; msg(e && e.code === 'invalid_argument' ? '수정 권한이 없어요. 기안자·담당자·결재자만 고칠 수 있어요.' : '저장하지 못했어요. 잠시 후 다시 해 주세요.'); }
   });
 
+  // 빠진 칸을 빨간 테두리로 표시하고 그 자리로 화면을 옮겨 줍니다.
+  const salesMiss = (boxId, text, focusEl) => {
+    document.querySelectorAll('#tf-sales .sr-miss').forEach((x) => x.classList.remove('sr-miss'));
+    const a = $('sr-alert');
+    if (!boxId) { a.hidden = true; return; }
+    $(boxId).classList.add('sr-miss');
+    a.textContent = '⚠ ' + text; a.hidden = false;
+    msg(text);
+    $(boxId).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (focusEl) setTimeout(() => focusEl.focus({ preventScroll: true }), 300);
+  };
   async function saveSales() {
     const rep = readSales();
-    if (!rep.date) { msg('보고일자를 골라 주세요.'); $('sr-date').focus(); return; }
-    if (!rep.part) { msg('소속(영업1파트 / 영업2파트)을 골라 주세요.'); $('sr-p1').focus(); return; }
-    if (!filledRows(rep).length) { msg('방문 내용을 한 줄 이상 적어 주세요.'); const x = document.querySelector('#sr-rows .r-cat'); if (x) x.focus(); return; }
+    salesMiss(null);
+    if (!rep.date) return salesMiss('sr-f-date', '보고일자를 골라 주세요.', $('sr-date'));
+    if (!rep.part) return salesMiss('sr-f-part', '소속/성명에서 영업1파트 또는 영업2파트를 체크해 주세요.', $('sr-p1'));
+    if (!filledRows(rep).length) return salesMiss('sr-tw', '방문 내용을 한 줄 이상 적어 주세요. (사업분류·업체명·면담자·상담 결과 중 하나라도)', document.querySelector('#sr-rows .r-cat'));
     const cap = await LD.cap;
     if (!cap.db) { msg('지금은 저장할 수 없어요.'); return; }
     const old = editId ? tasks().find((x) => x['업무번호'] === editId) : null;
@@ -2521,7 +2556,11 @@ window.LD.onApprovals = [];
     $('tf-save').disabled = true; msg('저장하는 중…');
     if (old && old['by']) doc.by = old['by'];
     try { const sid = editId ? (await cap.db.collection('tasks').doc(id).replace(doc), id) : await LD_CREATE_TASK(doc); $('tf-save').disabled = false; LD.openTask(sid, [sid]); }
-    catch (e) { $('tf-save').disabled = false; msg(e && e.code === 'invalid_argument' ? '수정 권한이 없어요. 기안자·담당자·결재자만 고칠 수 있어요.' : '저장하지 못했어요. 잠시 후 다시 해 주세요.'); }
+    catch (e) {
+      $('tf-save').disabled = false;
+      const t = e && e.code === 'invalid_argument' ? (editId ? '수정 권한이 없어요. 기안자·담당자·결재자만 고칠 수 있어요.' : '저장 권한이 없다고 나와요. 화면이 예전 버전일 수 있으니 Ctrl+F5로 새로고침한 뒤 다시 해 주세요.') : '저장하지 못했어요. 인터넷 연결을 확인하고 다시 해 주세요.';
+      msg(t); const a = $('sr-alert'); a.textContent = '⚠ ' + t; a.hidden = false; a.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   $('tf-del').addEventListener('click', async () => {
@@ -3003,13 +3042,7 @@ window.LD.onApprovals = [];
     const KEY = 'ld-chat-clean';
     try { if (Date.now() - Number(localStorage.getItem(KEY) || 0) < 20 * 3600e3) return; } catch {}
     try {
-      const { data, error } = await LD_SB.rpc('chat_expired_files');
-      if (error) return;
-      const ids = [...new Set((data || []).map((x) => (typeof x === 'string' ? x : x && Object.values(x)[0])).filter(Boolean))];
-      for (let i = 0; i < ids.length; i += 100) {
-        const r = await LD_SB.storage.from('attachments').remove(ids.slice(i, i + 100));
-        if (r.error) return;
-      }
+      // 20일 지난 대화를 먼저 지우면, 거기 붙어 있던 사진은 '안 쓰이는 첨부'가 되어 아래에서 같이 정리돼요.
       const p = await LD_SB.rpc('chat_purge');
       if (p.error) return;
       if (p.data > 0) { await refreshUnread(); if (room) { await openRoom(room); } }
