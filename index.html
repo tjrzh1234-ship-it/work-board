@@ -378,6 +378,44 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
 .ap-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
 .ap-top h2{margin:0}
 .ap-top .nt-send{margin-left:0}
+.ov-month{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;flex-wrap:wrap}
+.ov-month h2{margin:0;font-size:1.7rem;min-width:9rem;text-align:center}
+.ov-nav{font:inherit;font-size:1.2rem;background:var(--color-bg);color:var(--color-fg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:.4rem .9rem;cursor:pointer}
+.ov-amt{font-size:2.2rem}
+.ov-cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;align-items:start}
+.ov-col h2{margin:0;font-size:1.5rem}
+.ov-n{color:var(--color-fg-muted);font-weight:600}
+.ov-help{margin:.3rem 0 1rem;font-size:1rem;color:var(--color-fg-muted)}
+.ov-late-t{color:var(--color-bad)}
+.ov-grp{font-size:1.15rem;font-weight:700;margin:1.2rem 0 .5rem;padding-bottom:.3rem;border-bottom:2px solid var(--color-fg)}
+.ov-grp:first-child{margin-top:0}
+.ov-row{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:1fr auto;gap:.8rem;align-items:center;padding:.9rem 1rem;margin-bottom:.6rem;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg);cursor:pointer}
+.ov-row:hover{border-color:var(--color-fg)}
+.ov-row:focus-visible{outline:2px solid var(--color-fg)}
+.ov-row.ov-late{border-left:5px solid var(--color-bad)}
+.ov-title{font-size:1.25rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ov-sub{font-size:1rem;color:var(--color-fg-muted);margin-top:.15rem}
+.ov-right{font-size:1.15rem;font-weight:700;white-space:nowrap;text-align:right}
+.ov-right.ov-late{color:var(--color-bad)}
+.ov-seal{display:inline-block;border:2px solid currentColor;border-radius:999px;padding:.1rem .7rem}
+.ov-seal.no{color:var(--color-bad)}
+.ov-empty{font-size:1.15rem;color:var(--color-fg-muted);padding:1.2rem 0}
+@media (max-width:860px){.ov-cols{grid-template-columns:1fr}}
+.ld .frm .tf-kind{display:flex;flex-direction:row;gap:.6rem;margin-bottom:.4rem}
+.ld .frm .tf-kind label{display:flex;flex-direction:row;align-items:center;gap:.4rem;flex:none;font-size:1.15rem;font-weight:700;border:1px solid var(--color-border-line);border-radius:999px;padding:.45rem 1.1rem;cursor:pointer;background:var(--color-bg)}
+.ld .frm .tf-kind label:has(input:checked){background:var(--color-fg);color:var(--color-bg);border-color:var(--color-fg)}
+.ld .frm .tf-kind input{position:absolute;opacity:0;width:1px;height:1px}
+.ld .frm .tf-kind label:has(input:focus-visible){outline:2px solid var(--color-fg);outline-offset:2px}
+.ld .frm .tf-kind label{position:relative}
+.ld .frm .tf-task[hidden]{display:none}
+.ap-person{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem}
+.ap-person .chip{font-size:1.15rem;padding:.45rem 1.1rem}
+.ap-person .chip b{margin-left:.35rem;color:var(--color-bad)}
+.ap-person .chip[aria-pressed="true"] b{color:inherit}
+.ap-tabs{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.2rem 0 1rem;padding-top:.9rem;border-top:1px solid var(--color-border-line)}
+.ap-tabs h3{margin:0 .6rem 0 0;font-size:1.25rem}
+.ap-tabs .chip{font-size:1.1rem}
+.ap-tabs[hidden],.ap-tabs .chip[hidden]{display:none}
 .ap-tile{font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
 .ap-tile:hover,.ap-tile[aria-expanded="true"]{border-color:var(--color-fg)}
 .ap-tile:focus-visible{outline:2px solid var(--color-fg)}
@@ -453,6 +491,7 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     <button class="ld-tab" role="tab" id="all" data-page="page-all" aria-selected="false">전체 업무</button>
     <button class="ld-tab" role="tab" id="cal" data-page="page-cal" aria-selected="false">일정</button>
     <button class="ld-tab" role="tab" id="appr" data-page="page-appr" aria-selected="false">결재<span class="tab-badge" id="appr-badge" hidden></span></button>
+    <button class="ld-tab" role="tab" id="apov" data-page="page-apov" aria-selected="false" hidden>결재 현황</button>
     <button class="ld-tab" role="tab" id="chat" data-page="page-chat" aria-selected="false">메신저<span class="tab-badge" id="chat-badge" hidden></span></button>
     <button class="ld-tab" role="tab" id="inq" data-page="page-inq" aria-selected="false">문의 접수함<span class="tab-badge" id="inq-badge" hidden></span></button>
     <button class="ld-tab" role="tab" id="staff" data-page="page-staff" aria-selected="false" hidden>직원 관리<span class="tab-badge" id="staff-badge" hidden></span></button>
@@ -494,17 +533,21 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     <section class="ld-card tf">
       <h2 id="tf-title">업무 등록</h2>
       <div class="frm">
-        <label>업무명 *<input id="tf-name" placeholder="예: ○○상가 철거 견적서 작성"></label>
+        <div class="tf-kind" role="radiogroup" aria-label="구분">
+          <label><input type="radio" name="tf-kind" value="업무" checked> 업무</label>
+          <label><input type="radio" name="tf-kind" value="회의록"> 회의록</label>
+        </div>
+        <label><span id="tf-name-l">업무명 *</span><input id="tf-name" placeholder="예: ○○상가 철거 견적서 작성"></label>
         <div class="frm-row">
-          <label>담당자 *<input id="tf-who" list="tf-who-list" placeholder="이름 입력 또는 선택"></label>
-          <label>상태<select id="tf-status"><option>진행</option><option>보류</option><option>긴급</option></select></label>
-          <label>진척도<select id="tf-prog"></select></label>
+          <label><span id="tf-who-l">담당자 *</span><input id="tf-who" list="tf-who-list" placeholder="이름 입력 또는 선택"></label>
+          <label class="tf-task">상태<select id="tf-status"><option>진행</option><option>보류</option><option>긴급</option></select></label>
+          <label class="tf-task">진척도<select id="tf-prog"></select></label>
         </div>
         <div class="frm-row">
-          <label>시작일<input type="date" id="tf-start" min="2000-01-01" max="2099-12-31"></label>
-          <label>마감일 (없으면 비워 두세요)<input type="date" id="tf-due" min="2000-01-01" max="2099-12-31"></label>
+          <label><span id="tf-start-l">시작일</span><input type="date" id="tf-start" min="2000-01-01" max="2099-12-31"></label>
+          <label class="tf-task">마감일 (없으면 비워 두세요)<input type="date" id="tf-due" min="2000-01-01" max="2099-12-31"></label>
         </div>
-        <label>업무 내용<textarea id="tf-body" rows="5" placeholder="해야 할 일, 참고 사항을 적어 주세요"></textarea></label>
+        <label><span id="tf-body-l">업무 내용</span><textarea id="tf-body" rows="5" placeholder="해야 할 일, 참고 사항을 적어 주세요"></textarea></label>
         <div class="frm-actions">
           <span class="nt-msg" id="tf-msg" role="status"></span>
           <button type="button" class="btn-del" id="tf-del" hidden>업무 삭제</button>
@@ -593,6 +636,33 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
     </section>
   </div>
 
+  <div class="ld-page" id="page-apov" role="tabpanel" hidden>
+    <div class="ov-month">
+      <button type="button" class="ov-nav" id="ov-prev" aria-label="지난달">◀</button>
+      <h2 id="ov-ym"></h2>
+      <button type="button" class="ov-nav" id="ov-next" aria-label="다음 달">▶</button>
+      <button type="button" class="btn-line" id="ov-now">이번 달</button>
+    </div>
+    <section class="ld-tiles" aria-label="결재 현황 요약">
+      <div class="ld-tile"><div class="lbl">지금 결재 대기</div><div class="val"><span class="num" id="ov-t-wait">—</span><span class="unit">건</span></div></div>
+      <div class="ld-tile"><div class="lbl" id="ov-l-ok">승인</div><div class="val"><span class="num" id="ov-t-ok">—</span><span class="unit">건</span></div></div>
+      <div class="ld-tile"><div class="lbl" id="ov-l-no">반려</div><div class="val"><span class="num" id="ov-t-no">—</span><span class="unit">건</span></div></div>
+      <div class="ld-tile"><div class="lbl" id="ov-l-amt">승인 금액</div><div class="val"><span class="num ov-amt" id="ov-t-amt">—</span><span class="unit">원</span></div></div>
+    </section>
+    <div class="ov-cols">
+      <section class="ld-card ov-col">
+        <h2>결재 대기 <span class="ov-n" id="ov-wait-n"></span></h2>
+        <p class="ov-help">오래 기다린 문서가 위에 있어요. <b class="ov-late-t">3일 이상</b>은 빨간색으로 표시돼요.</p>
+        <div id="ov-wait"></div>
+      </section>
+      <section class="ld-card ov-col">
+        <h2 id="ov-done-h">결재 완료</h2>
+        <p class="ov-help">최근에 결재한 문서가 위에 있어요.</p>
+        <div id="ov-done"></div>
+      </section>
+    </div>
+  </div>
+
   <div class="ld-page" id="page-appr" role="tabpanel" hidden>
     <section class="ld-tiles" aria-label="결재 요약">
       <button type="button" class="ld-tile warn ap-tile" data-pop="wait" aria-expanded="false"><div class="lbl">결재 대기</div><div class="val"><span class="num" id="ap-wait">—</span><span class="unit">건</span></div><div class="ap-tile-hint">눌러서 목록 보기 ▾</div></button>
@@ -607,7 +677,8 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
         <h2>결재함</h2>
         <button type="button" class="nt-send" id="ap-new">+ 새 결재 문서</button>
       </div>
-      <div class="ld-tools" id="ap-chips"></div>
+      <div class="ap-person" id="ap-chips" aria-label="직원별 결재 문서"></div>
+      <div class="ap-tabs" id="ap-sub" hidden><h3 id="ap-sub-h"></h3></div>
       <ul class="ap-list" id="ap-list"></ul>
     </section>
   </div>
@@ -882,14 +953,17 @@ const SUPABASE_ANON_KEY = 'sb_publishable_WXbAHGbo9QrRDtSO8LmXnA_UiapON2B';
   }));
 
   const loadPeople = async () => {
-    const { data: profs, error } = await sb.from('profiles').select('id,name,title,email,status,can_manage,approve_all,approve_for,created_at');
+    const cols = 'id,name,title,email,status,can_manage,approve_all,approve_for,created_at';
+    let { data: profs, error } = await sb.from('profiles').select(cols + ',see_overview');
+    if (error) ({ data: profs, error } = await sb.from('profiles').select(cols));
     if (error) throw error;
     Object.keys(people).forEach((k) => delete people[k]);
     (profs || []).forEach((p) => { people[p.id] = { ...p, approve_for: p.approve_for || [] }; });
   };
   window.LD_ALL_PROFILES = () => Object.values(people);
-  window.LD_RELOAD_PEOPLE = async () => { await loadPeople(); me = me ? people[me.id] || me : me; redraw(); };
-  const roleText = (p) => [p.approve_all ? '결재(전체)' : (p.approve_for || []).length ? `결재(${p.approve_for.length}명)` : '', p.can_manage ? '직원 관리' : ''].filter(Boolean).join(' · ');
+  const ovTab = () => { const t = $('apov'); if (t) t.hidden = !(me && me.see_overview); };
+  window.LD_RELOAD_PEOPLE = async () => { await loadPeople(); me = me ? people[me.id] || me : me; ovTab(); if (me) $('me-role').textContent = roleText(me); redraw(); };
+  const roleText = (p) => [p.approve_all ? '결재(전체)' : (p.approve_for || []).length ? `결재(${p.approve_for.length}명)` : '', p.can_manage ? '직원 관리' : '', p.see_overview ? '결재 현황' : ''].filter(Boolean).join(' · ');
   window.LD_ROLE_TEXT = roleText;
   const applyProfile = async (uid, email) => {
     const name = $('lg-name').value.trim(), title = $('lg-title').value.trim();
@@ -906,6 +980,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_WXbAHGbo9QrRDtSO8LmXnA_UiapON2B';
     $('me-name').textContent = `${me.name}${me.title ? ' ' + me.title : ''}`;
     $('me-role').textContent = roleText(me);
     const st = $('staff'); if (st) st.hidden = !me.can_manage;
+    ovTab();
     gate.hidden = true; root.hidden = false;
     if (entered) return; entered = true;
     await load('tasks').catch(() => {});
@@ -978,7 +1053,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_WXbAHGbo9QrRDtSO8LmXnA_UiapON2B';
 <script>
 window.LD = (() => {
   const STAT = ['진행', '보류', '긴급', '완료'];
-  const color = (s) => ({ '진행': 'var(--color-fg)', '보류': 'var(--ac-2)', '긴급': 'var(--color-bad)', '완료': 'var(--color-fg-muted)' }[s] || 'var(--cds-chart-muted)');
+  const color = (s) => ({ '진행': 'var(--color-fg)', '보류': 'var(--ac-2)', '긴급': 'var(--color-bad)', '완료': 'var(--color-fg-muted)', '회의록': 'var(--cement-d)' }[s] || 'var(--cds-chart-muted)');
   const pill = (text, c) => { const s = document.createElement('span'); s.className = 'pill'; s.textContent = text; s.style.color = c; s.style.background = `color-mix(in srgb, ${c} 15%, transparent)`; return s; };
   const fail = (el) => { el.replaceChildren(); const f = document.createElement('div'); f.className = 'fail'; f.textContent = 'Failed to load'; el.appendChild(f); };
   const clickable = (el, id) => {
@@ -1001,7 +1076,7 @@ dash.calc('kpi', {
     const iso = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     const today = iso(now);
     const week = iso(new Date(now.getTime() + 6 * 86400000));
-    const open = tasks.filter((t) => t['상태'] !== '완료');
+    const open = tasks.filter((t) => t['상태'] !== '완료' && t['구분'] !== '회의록');
     return [{
       지연: open.filter((t) => t['마감일'] && t['마감일'] < today).length,
       긴급: open.filter((t) => t['상태'] !== '보류' && t['우선순위'] === '긴급').length,
@@ -1020,13 +1095,15 @@ dash.calc('task_list', {
     const now = new Date();
     const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     return tasks.map((t) => {
-      const d = t['마감일'] || '';
+      const meet = t['구분'] === '회의록';
+      const d = meet ? '' : t['마감일'] || '';
       const diff = d ? Math.round((Date.parse(d) - Date.parse(today)) / 86400000) : null;
       const md = d ? `${+d.slice(5, 7)}월 ${+d.slice(8, 10)}일` : '없음';
       let tag = '';
       if (diff !== null && t['상태'] !== '완료') tag = diff < 0 ? ` · ${-diff}일 지남` : diff === 0 ? ' · 오늘' : diff <= 3 ? ` · ${diff}일 남음` : '';
       const kd = (v) => (v ? `${+String(v).slice(5, 7)}월 ${+String(v).slice(8, 10)}일` : '없음');
-      return { 업무번호: t['업무번호'], 업무명: t['업무명'], 상태: t['상태'], 우선순위: t['우선순위'], 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: t['상태'] === '완료' ? '완료' : t['상태'] === '보류' ? '보류' : t['우선순위'] === '긴급' ? '긴급' : '진행', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: t['진척도'], 마감일: d, 마감: md + tag, 남은일수: diff, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: Number(t['진척도']) || 0, 수정: kd(t['수정일']) };
+      if (meet) return { 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '회의록', 상태: '회의록', 우선순위: '', 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: '회의록', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: '', 마감일: '', 마감: '회의 ' + kd(t['시작일']), 남은일수: null, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: 0, 수정: kd(t['수정일']) };
+      return { 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '업무', 상태: t['상태'], 우선순위: t['우선순위'], 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: t['상태'] === '완료' ? '완료' : t['상태'] === '보류' ? '보류' : t['우선순위'] === '긴급' ? '긴급' : '진행', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: t['진척도'], 마감일: d, 마감: md + tag, 남은일수: diff, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: Number(t['진척도']) || 0, 수정: kd(t['수정일']) };
     });
   },
 });
@@ -1036,7 +1113,7 @@ dash.calc('attention', {
   description: '미완료 업무 중 마감이 지났거나 긴급인 것을 마감이 많이 지난 순으로 모읍니다.',
   inputs: ['task_list'],
   fn: (task_list) => task_list
-    .filter((t) => t['상태'] !== '완료')
+    .filter((t) => t['상태'] !== '완료' && t['구분'] !== '회의록')
     .map((t) => {
       const why = [];
       if (t['남은일수'] !== null && t['남은일수'] < 0) why.push('마감 지남');
@@ -1054,6 +1131,7 @@ dash.calc('by_person', {
   fn: (task_list) => {
     const m = new Map();
     for (const t of task_list) {
+      if (t['구분'] === '회의록') continue;
       const p = t['담당자'];
       if (!m.has(p)) m.set(p, { 담당자: p, 진행중: 0, 지연: 0, 완료: 0, 진행: 0, 요청: 0, 피드백: 0, 보류: 0 });
       const r = m.get(p);
@@ -1100,7 +1178,7 @@ dash.onData(() => {
     if (!p.data.length) { const e = document.createElement('p'); e.className = 'empty'; e.style.gridColumn = '1 / -1'; e.textContent = '등록된 업무가 없어요. 오른쪽 위 [+ 업무 등록]으로 첫 업무를 등록해 보세요.'; host.appendChild(e); return; }
     for (const r of p.data) {
       const name = r['담당자'];
-      const mine = t.data.filter((x) => x['담당자'] === name && x['상태'] !== '완료')
+      const mine = t.data.filter((x) => x['담당자'] === name && x['상태'] !== '완료' && x['구분'] !== '회의록')
         .sort((a, b) => ((a['남은일수'] ?? 999) - (b['남은일수'] ?? 999)) || ((pri[a['우선순위']] ?? 9) - (pri[b['우선순위']] ?? 9)));
       const mk = (f, cls) => { const b = document.createElement('b'); b.textContent = String(r[f]); b.dataset.source = 'by_person'; b.dataset.field = f; b.setAttribute('data-where', '담당자=' + encodeURIComponent(name)); if (cls) b.className = cls; return b; };
 
@@ -1191,10 +1269,10 @@ dash.onData(() => {
   const tb = table.querySelector('tbody');
   const emptyMsg = document.getElementById('all-empty');
   const state = { status: '', sortKey: '마감일', dir: 1 };
-  const ST = { '긴급': 0, '진행': 1, '보류': 2, '완료': 3 };
+  const ST = { '긴급': 0, '진행': 1, '보류': 2, '완료': 3, '회의록': 4 };
   const label = { '': '전체' };
   const setChip = (s) => { state.status = s; chipsBox.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.s === s))); };
-  ['', ...LD.STAT].forEach((s) => {
+  ['', ...LD.STAT, '회의록'].forEach((s) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = label[s] || s; b.dataset.s = s;
     b.addEventListener('click', () => { setChip(s); draw(); });
     chipsBox.appendChild(b);
@@ -1238,6 +1316,7 @@ dash.onData(() => {
     }
   }
   window.LD.showPerson = (name) => { q.value = ''; setChip(''); draw(); who.value = name; draw(); };
+  window.LD.allFilter = () => state.status;
   dash.onData(draw);
 })();
 </script>
@@ -1328,7 +1407,12 @@ dash.onData(() => {
     next.addEventListener('click', () => LD.openTask(order[i + 1], order));
     nav.append(prev, next);
 
-    el.append(top, h, due, prog, grid);
+    const meetDoc = r['구분'] === '회의록';
+    if (meetDoc) {
+      dl.textContent = '회의 날짜'; dv.textContent = r['시작']; due.classList.remove('late', 'soon');
+      grid.querySelectorAll('dt').forEach((x) => { if (x.textContent === '담당자') x.textContent = '작성자'; if (x.textContent === '시작일') x.parentElement.remove(); });
+    }
+    el.append(top, h, due, ...(meetDoc ? [] : [prog]), grid);
     if (window.LD.detailExtras) el.appendChild(window.LD.detailExtras(r));
     el.appendChild(nav);
   };
@@ -1552,7 +1636,7 @@ window.LD.onApprovals = [];
     if (!$('cal-tasks').checked) return [];
     const d = dash.data('task_list');
     if (d.status !== 'ok') return [];
-    return d.data.filter((t) => t['상태'] !== '완료' && t['마감일']).map((t) => ({ id: 't-' + t['업무번호'], type: '업무 마감', title: t['업무명'], who: t['담당자'], start: t['마감일'], end: t['마감일'], task: t['업무번호'] }));
+    return d.data.filter((t) => t['상태'] !== '완료' && t['구분'] !== '회의록' && t['마감일']).map((t) => ({ id: 't-' + t['업무번호'], type: '업무 마감', title: t['업무명'], who: t['담당자'], start: t['마감일'], end: t['마감일'], task: t['업무번호'] }));
   };
   const all = () => [...events, ...leaveFromApprovals(), ...taskEvents()];
   const on = (list, day) => list.filter((e) => e.start <= day && (e.end || e.start) >= day)
@@ -1676,27 +1760,120 @@ window.LD.onApprovals = [];
 
   // ── 결재함 목록 ──
   const chips = $('ap-chips');
-  ['대기', '승인', '반려', '전체'].forEach((s) => {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.s = s; b.textContent = s === '대기' ? '결재 대기' : s === '승인' ? '결재 완료' : s;
+  // 직원 이름 → 그 직원이 올린 결재 문서 (결재 대기 · 결재 완료 · 반려)
+  let person = null;
+  const SUBS = [['대기', '결재 대기'], ['승인', '결재 완료'], ['반려', '반려'], ['초안', '작성 중']];
+  const subBox = $('ap-sub');
+  const subBtns = SUBS.map(([s, t]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.s = s; b.dataset.t = t;
     b.addEventListener('click', () => { filter = s; drawList(); });
-    chips.appendChild(b);
+    subBox.appendChild(b); return b;
   });
   const visible = () => items.filter((a) => a.status !== '초안' || mine(a));
 
+  function drawChips() {
+    const staff = (window.LD_PEOPLE ? LD_PEOPLE() : []).slice().sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+    if (person && !staff.some((p) => p.id === person) && !items.some((a) => a.author === person)) person = null;
+    chips.replaceChildren(...staff.map((p) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip';
+      b.setAttribute('aria-pressed', String(p.id === person));
+      b.append(`${p.name}${p.title ? ' ' + p.title : ''}`);
+      const w = items.filter((a) => a.author === p.id && a.status === '대기').length;
+      if (w) { const n = document.createElement('b'); n.textContent = String(w); n.title = `결재 대기 ${w}건`; b.appendChild(n); }
+      b.addEventListener('click', () => { if (person === p.id) { person = null; } else { person = p.id; filter = '대기'; } drawList(); });
+      return b;
+    }));
+    if (!staff.length) { const e = document.createElement('span'); e.className = 'ap-sub-empty'; e.textContent = '승인된 직원이 아직 없어요.'; chips.appendChild(e); }
+  }
+
   function drawList() {
-    chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.s === filter)));
+    drawChips();
     const ym = LD.iso(new Date()).slice(0, 7);
     const wait = items.filter((a) => a.status === '대기').length;
     $('ap-wait').textContent = String(wait);
     const okMonth = items.filter((a) => a.status === '승인' && a.decidedAt.slice(0, 7) === ym);
     $('ap-ok').textContent = String(okMonth.length);
     drawPop(items.filter((a) => a.status === '대기'), okMonth);
+    drawOv();
     const mine4me = items.filter((a) => a.status === '대기' && canDecide(a)).length;
     const badge = $('appr-badge'); badge.hidden = !mine4me; badge.textContent = String(mine4me);
     const ul = $('ap-list'); ul.replaceChildren();
-    const rows = visible().filter((a) => filter === '전체' || a.status === filter);
-    if (!rows.length) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = { '대기': '기다리는 결재가 없어요.', '승인': '결재 완료된 문서가 없어요.' }[filter] || '해당하는 문서가 없어요.'; ul.appendChild(li); return; }
+    subBox.hidden = !person;
+    if (!person) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = '위에서 직원 이름을 누르면 그 직원이 올린 결재 문서가 보여요.'; ul.appendChild(li); return; }
+    const pp = (window.LD_ALL_PROFILES ? LD_ALL_PROFILES() : []).find((x) => x.id === person);
+    $('ap-sub-h').textContent = `${pp ? pp.name : '직원'}${cap && person === cap.me ? ' (나)' : ''}`;
+    const his = visible().filter((a) => a.author === person);
+    if (filter === '초안' && !his.some((a) => a.status === '초안')) filter = '대기';
+    subBtns.forEach((b) => {
+      const n = his.filter((a) => a.status === b.dataset.s).length;
+      b.hidden = b.dataset.s === '초안' && !n;
+      b.textContent = `${b.dataset.t} ${n}`;
+      b.setAttribute('aria-pressed', String(b.dataset.s === filter));
+    });
+    const rows = his.filter((a) => a.status === filter).sort((a, b) => ((b.decidedAt || b.sentAt || b.at) || '').localeCompare((a.decidedAt || a.sentAt || a.at) || ''));
+    if (!rows.length) { const li = document.createElement('li'); li.className = 'nt-empty'; li.textContent = { '대기': '결재 대기 중인 문서가 없어요.', '승인': '결재 완료된 문서가 없어요.', '반려': '반려된 문서가 없어요.' }[filter] || '해당하는 문서가 없어요.'; ul.appendChild(li); return; }
     for (const a of rows) ul.appendChild(rowOf(a));
+  }
+
+  // ── 결재 현황판 (대표님·전무님용) ──
+  let ovYm = LD.iso(new Date()).slice(0, 7);
+  const shiftYm = (ym, d) => { const [y, m] = ym.split('-').map(Number); const t = new Date(y, m - 1 + d, 1); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}`; };
+  $('ov-prev').addEventListener('click', () => { ovYm = shiftYm(ovYm, -1); drawOv(); });
+  $('ov-next').addEventListener('click', () => { ovYm = shiftYm(ovYm, 1); drawOv(); });
+  $('ov-now').addEventListener('click', () => { ovYm = LD.iso(new Date()).slice(0, 7); drawOv(); });
+  const daysSince = (iso) => (iso ? Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 864e5)) : 0);
+  const ovRow = (a, sub, right, late) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'ov-row' + (late ? ' ov-late' : '');
+    const mid = document.createElement('div'); mid.style.minWidth = '0';
+    const t = document.createElement('div'); t.className = 'ov-title'; t.textContent = `[${a.kind}] ${a.title}`;
+    const s2 = document.createElement('div'); s2.className = 'ov-sub'; s2.textContent = sub;
+    mid.append(t, s2);
+    const r = document.createElement('div'); r.className = 'ov-right' + (late ? ' ov-late' : ''); 
+    if (right instanceof Node) r.appendChild(right); else r.textContent = right;
+    b.append(mid, r);
+    b.addEventListener('click', () => openDoc(a.id, 'view', 'apov'));
+    return b;
+  };
+  const emptyOv = (t) => { const p = document.createElement('p'); p.className = 'ov-empty'; p.textContent = t; return p; };
+  function drawOv() {
+    if (!$('page-apov')) return;
+    const [y, m] = ovYm.split('-').map(Number);
+    const thisYm = LD.iso(new Date()).slice(0, 7);
+    $('ov-ym').textContent = `${y}년 ${m}월`;
+    $('ov-now').hidden = ovYm === thisYm;
+    const lab = ovYm === thisYm ? '이번 달' : `${m}월`;
+    $('ov-l-ok').textContent = `${lab} 승인`; $('ov-l-no').textContent = `${lab} 반려`; $('ov-l-amt').textContent = `${lab} 승인 금액`;
+    // 대기 (지금 기준)
+    const wait = items.filter((a) => a.status === '대기').sort((a, b) => (a.sentAt || a.at).localeCompare(b.sentAt || b.at));
+    $('ov-t-wait').textContent = String(wait.length);
+    $('ov-wait-n').textContent = `${wait.length}건`;
+    const wBox = $('ov-wait'); wBox.replaceChildren();
+    if (!wait.length) wBox.appendChild(emptyOv('기다리는 결재가 없어요.'));
+    const groups = new Map();
+    wait.forEach((a) => { const k = a.approver || ''; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(a); });
+    for (const [k, list] of groups) {
+      const h = document.createElement('div'); h.className = 'ov-grp';
+      h.textContent = `${k ? personLabel(k) || '결재자' : '결재자 미지정'} 결재 대기 · ${list.length}건`;
+      wBox.appendChild(h);
+      list.forEach((a) => {
+        const d = daysSince(a.sentAt || a.at);
+        const extra = a.kind === '연차·휴가' && a.start ? ` · ${LD.range(a.start, a.end)}` : a.amount ? ` · ${won(a.amount)}` : '';
+        wBox.appendChild(ovRow(a, `기안 ${a.name || who(a.author)} · ${LD.kd((a.sentAt || a.at).slice(0, 10))} 올림${extra}`, d === 0 ? '오늘 올림' : `${d}일째`, d >= 3));
+      });
+    }
+    // 완료 (선택한 달)
+    const done = items.filter((a) => (a.status === '승인' || a.status === '반려') && (a.decidedAt || '').slice(0, 7) === ovYm).sort((a, b) => b.decidedAt.localeCompare(a.decidedAt));
+    const ok = done.filter((a) => a.status === '승인'), no = done.filter((a) => a.status === '반려');
+    $('ov-t-ok').textContent = String(ok.length); $('ov-t-no').textContent = String(no.length);
+    $('ov-t-amt').textContent = ok.reduce((n, a) => n + (Number(a.amount) || 0), 0).toLocaleString('ko-KR');
+    $('ov-done-h').textContent = `${lab} 결재 완료 ${done.length}건`;
+    const dBox = $('ov-done'); dBox.replaceChildren();
+    if (!done.length) dBox.appendChild(emptyOv(`${lab}에 결재한 문서가 없어요.`));
+    done.forEach((a) => {
+      const extra = a.kind === '연차·휴가' && a.start ? ` · ${LD.range(a.start, a.end)}` : a.amount ? ` · ${won(a.amount)}` : '';
+      const seal = document.createElement('span'); seal.className = 'ov-seal' + (a.status === '반려' ? ' no' : ''); seal.textContent = a.status;
+      dBox.appendChild(ovRow(a, `기안 ${a.name || who(a.author)} · 결재 ${(window.LD_NAME && LD_NAME(a.decidedBy)) || '책임자'} ${LD.kd(a.decidedAt.slice(0, 10))}${extra}`, seal, false));
+    });
   }
 
   // 위 요약 칸을 누르면 그 목록을 펼쳐 보여 줌
@@ -1734,14 +1911,17 @@ window.LD.onApprovals = [];
   }
 
   // ── 결재 문서 창 ──
-  const openDoc = (id, m) => {
+  let backTab = 'appr';
+  const openDoc = (id, m, from) => {
+    if (from !== undefined || !cur) backTab = from || 'appr';
     cur = id; mode = m; files = [];
+    $('doc-back').textContent = backTab === 'apov' ? '← 결재 현황으로' : '← 결재함으로';
     LD.showPage('page-apdoc');
     dash.setLink(id ? 'doc-' + id : 'doc-new');
     drawDoc();
     window.scrollTo({ top: 0 });
   };
-  const closeDoc = () => { cur = null; LD.showTab('appr'); };
+  const closeDoc = () => { cur = null; const t = document.getElementById(backTab); LD.showTab(t && !t.hidden ? backTab : 'appr'); backTab = 'appr'; };
   $('doc-back').addEventListener('click', closeDoc);
   $('ap-new').addEventListener('click', () => openDoc(null, 'edit'));
 
@@ -1858,7 +2038,7 @@ window.LD.onApprovals = [];
           else { const ref = await cap.db.collection('approvals').add(doc); id = ref.id; }
           try { localStorage.setItem('ld-name', n); savedName = n; } catch {}
           files = [];
-          filter = status === '대기' ? '대기' : '전체';
+          filter = status === '대기' ? '대기' : '초안'; person = cap.me;
           cur = id; mode = 'view';
           if (!items.find((x) => x.id === id)) items = [{ id, ...doc, files: up }, ...items];
           drawDoc();
@@ -1982,6 +2162,23 @@ window.LD.onApprovals = [];
     : st === '완료' ? { 상태: '완료', 우선순위: old && old['우선순위'] !== '긴급' ? old['우선순위'] || '보통' : '보통' }
     : { 상태: st, 우선순위: old && old['우선순위'] !== '긴급' ? old['우선순위'] || '보통' : '보통' };
   window.LD.simpleState = simple;
+  const MEET_TPL = '참석자:\n안건:\n논의 내용:\n결정 사항:\n할 일 (담당 / 기한):';
+  const kindNow = () => (document.querySelector('input[name="tf-kind"]:checked') || {}).value || '업무';
+  const syncKind = () => {
+    const m = kindNow() === '회의록';
+    document.querySelectorAll('#page-taskform .tf-task').forEach((x) => { x.hidden = m; });
+    $('tf-name-l').textContent = m ? '회의 제목 *' : '업무명 *';
+    $('tf-name').placeholder = m ? '예: 10월 4주차 현장 회의' : '예: ○○상가 철거 견적서 작성';
+    $('tf-who-l').textContent = m ? '작성자 *' : '담당자 *';
+    $('tf-start-l').textContent = m ? '회의 날짜' : '시작일';
+    $('tf-body-l').textContent = m ? '회의 내용' : '업무 내용';
+    $('tf-body').placeholder = m ? '참석자, 안건, 결정 사항을 적어 주세요' : '해야 할 일, 참고 사항을 적어 주세요';
+    if (m && !$('tf-body').value.trim()) $('tf-body').value = MEET_TPL;
+    if (!m && $('tf-body').value === MEET_TPL) $('tf-body').value = '';
+    $('tf-title').textContent = (editId ? (m ? '회의록 수정' : '업무 수정') : (m ? '회의록 등록' : '업무 등록'));
+    $('tf-del').textContent = m ? '회의록 삭제' : '업무 삭제';
+  };
+  document.querySelectorAll('input[name="tf-kind"]').forEach((r) => r.addEventListener('change', syncKind));
 
   const open = (id) => {
     editId = id || null;
@@ -2000,6 +2197,10 @@ window.LD.onApprovals = [];
     $('tf-due').value = t ? t['마감일'] || '' : '';
     $('tf-body').value = t ? t['내용'] || '' : '';
     $('tf-del').hidden = !t;
+    const k0 = t && t['구분'] === '회의록' ? '회의록' : (!t && from === 'all' && window.LD.allFilter && LD.allFilter() === '회의록' ? '회의록' : '업무');
+    document.querySelectorAll('input[name="tf-kind"]').forEach((r) => { r.checked = r.value === k0; });
+    if (!t && k0 === '회의록') { const me0 = window.LD_ME && LD_ME(); if (me0) $('tf-who').value = me0.name; }
+    syncKind();
     LD.showPage('page-taskform');
     dash.setLink(t ? 'edit-' + t['업무번호'] : 'new-task');
     window.scrollTo({ top: 0 });
@@ -2015,18 +2216,21 @@ window.LD.onApprovals = [];
     const name = $('tf-name').value.trim(), who = $('tf-who').value.trim();
     if (!name) { msg('업무명을 적어 주세요.'); $('tf-name').focus(); return; }
     if (!who) { msg('담당자를 적어 주세요.'); $('tf-who').focus(); return; }
-    let start = $('tf-start').value, due = $('tf-due').value;
+    const meet = kindNow() === '회의록';
+    let start = $('tf-start').value, due = meet ? '' : $('tf-due').value;
+    if (meet && $('tf-body').value.trim() === MEET_TPL) { msg('회의 내용을 적어 주세요.'); $('tf-body').focus(); return; }
     if (start && due && due < start) { msg('마감일이 시작일보다 빨라요.'); $('tf-due').focus(); return; }
     const cap = await LD.cap;
     if (!cap.db) { msg('지금은 저장할 수 없어요.'); return; }
     const old = editId ? tasks().find((x) => x['업무번호'] === editId) : null;
     const id = editId || nextId();
-    const f = toFields($('tf-status').value, old);
+    const f = meet ? { 상태: '진행', 우선순위: '보통' } : toFields($('tf-status').value, old);
     const status = f['상태'];
     const doc = {
       업무번호: id, 프로젝트: old ? old['프로젝트'] || '' : '', 업무명: name, 상태: status, 우선순위: f['우선순위'],
       담당자: who, 작성자: old ? old['작성자'] || '' : '', 시작일: start || today(), 마감일: due,
-      진척도: status === '완료' ? '100' : $('tf-prog').value, 수정일: today(), 내용: $('tf-body').value.trim(),
+      진척도: meet ? '0' : status === '완료' ? '100' : $('tf-prog').value, 수정일: today(), 내용: $('tf-body').value.trim(),
+      ...(meet ? { 구분: '회의록' } : {}),
     };
     $('tf-save').disabled = true; msg('저장하는 중…');
     try {
@@ -2049,9 +2253,15 @@ window.LD.onApprovals = [];
   window.LD.detailExtras = (r) => {
     const box = document.createElement('div'); box.className = 'dt-act';
     if (r['내용']) {
-      const l = document.createElement('div'); l.className = 'lbl'; l.textContent = '업무 내용';
+      const l = document.createElement('div'); l.className = 'lbl'; l.textContent = r['구분'] === '회의록' ? '회의 내용' : '업무 내용';
       const p = document.createElement('p'); p.className = 'dt-body'; p.textContent = r['내용'];
       box.append(l, p);
+    }
+    if (r['구분'] === '회의록') {
+      const ed0 = document.createElement('button'); ed0.type = 'button'; ed0.className = 'edit-btn'; ed0.textContent = '✏️ 회의록 수정';
+      ed0.addEventListener('click', () => open(r['업무번호']));
+      const row0 = document.createElement('div'); row0.className = 'row'; row0.appendChild(ed0);
+      box.appendChild(row0); return box;
     }
     const l2 = document.createElement('div'); l2.className = 'lbl'; l2.textContent = '상태 바로 바꾸기';
     const row = document.createElement('div'); row.className = 'row';
@@ -2100,17 +2310,19 @@ window.LD.onApprovals = [];
     [rNone, rAll, rSome].forEach((r) => r.addEventListener('change', sync)); sync();
     const r2 = mk('div', 'row'); r2.appendChild(mk('span', 'lbl', '직원 관리'));
     const ml = mk('label'); const mc = mk('input'); mc.type = 'checkbox'; mc.checked = !!p.can_manage; ml.append(mc, '가입 승인 · 권한 수정 · 퇴사 처리'); r2.appendChild(ml);
+    const r3 = mk('div', 'row'); r3.appendChild(mk('span', 'lbl', '결재 현황'));
+    const vl = mk('label'); const vc = mk('input'); vc.type = 'checkbox'; vc.checked = !!p.see_overview; vl.append(vc, '결재 현황판 보기 (대표님 · 전무님용)'); r3.appendChild(vl);
     const btns = mk('div', 'sf-btns'); const msg = mk('span', 'nt-msg');
     const save = mk('button', 'sf-btn main', saveLabel); save.type = 'button';
     save.addEventListener('click', async () => {
       const ids = checks.filter((c) => c.checked).map((c) => c.value);
       if (rSome.checked && !ids.length) { msg.textContent = '결재할 직원을 한 명 이상 골라 주세요.'; return; }
       save.disabled = true; msg.textContent = '저장하는 중…';
-      const ok = await onSave({ approve_all: rAll.checked, approve_for: rSome.checked ? ids : [], can_manage: mc.checked }, msg);
+      const ok = await onSave({ approve_all: rAll.checked, approve_for: rSome.checked ? ids : [], can_manage: mc.checked, see_overview: vc.checked }, msg);
       save.disabled = false; if (ok) msg.textContent = '';
     });
     btns.append(msg, ...(extraBtns || []), save);
-    box.append(r1, pick, r2, btns);
+    box.append(r1, pick, r2, r3, btns);
     return box;
   };
 
