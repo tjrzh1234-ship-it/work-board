@@ -733,7 +733,6 @@ body{background:var(--color-bg);color:var(--color-fg);font-family:var(--font-ant
       <div class="ld-tile"><div class="lbl">지금 결재 대기</div><div class="val"><span class="num" id="ov-t-wait">—</span><span class="unit">건</span></div></div>
       <div class="ld-tile"><div class="lbl" id="ov-l-ok">승인</div><div class="val"><span class="num" id="ov-t-ok">—</span><span class="unit">건</span></div></div>
       <div class="ld-tile"><div class="lbl" id="ov-l-no">반려</div><div class="val"><span class="num" id="ov-t-no">—</span><span class="unit">건</span></div></div>
-      <div class="ld-tile"><div class="lbl" id="ov-l-amt">승인 금액</div><div class="val"><span class="num ov-amt" id="ov-t-amt">—</span><span class="unit">원</span></div></div>
     </section>
     <div class="ov-cols">
       <section class="ld-card ov-col">
@@ -1981,7 +1980,7 @@ window.LD.onApprovals = [];
     $('ov-ym').textContent = `${y}년 ${m}월`;
     $('ov-now').hidden = ovYm === thisYm;
     const lab = ovYm === thisYm ? '이번 달' : `${m}월`;
-    $('ov-l-ok').textContent = `${lab} 승인`; $('ov-l-no').textContent = `${lab} 반려`; $('ov-l-amt').textContent = `${lab} 승인 금액`;
+    $('ov-l-ok').textContent = `${lab} 승인`; $('ov-l-no').textContent = `${lab} 반려`;
     // 대기 (지금 기준)
     const wait = items.filter((a) => a.status === '대기').sort((a, b) => (a.sentAt || a.at).localeCompare(b.sentAt || b.at));
     $('ov-t-wait').textContent = String(wait.length);
@@ -2004,7 +2003,6 @@ window.LD.onApprovals = [];
     const done = items.filter((a) => (a.status === '승인' || a.status === '반려') && (a.decidedAt || '').slice(0, 7) === ovYm).sort((a, b) => b.decidedAt.localeCompare(a.decidedAt));
     const ok = done.filter((a) => a.status === '승인'), no = done.filter((a) => a.status === '반려');
     $('ov-t-ok').textContent = String(ok.length); $('ov-t-no').textContent = String(no.length);
-    $('ov-t-amt').textContent = ok.reduce((n, a) => n + (Number(a.amount) || 0), 0).toLocaleString('ko-KR');
     $('ov-done-h').textContent = `${lab} 결재 완료 ${done.length}건`;
     const dBox = $('ov-done'); dBox.replaceChildren();
     if (!done.length) dBox.appendChild(emptyOv(`${lab}에 결재한 문서가 없어요.`));
