@@ -2995,10 +2995,10 @@ window.LD.onApprovals = [];
         .subscribe();
     } catch {}
     setInterval(refreshUnread, 30000);
-    if (m0.can_manage) cleanup();
+    cleanup();
   });
 
-  // 20일 지난 대화·첨부 정리 (직원 관리 권한자가 접속할 때 하루 한 번)
+  // 20일 지난 대화·첨부, 쓰이지 않는 첨부 정리 (승인된 직원이 접속할 때, 한 사람당 하루 한 번)
   async function cleanup() {
     const KEY = 'ld-chat-clean';
     try { if (Date.now() - Number(localStorage.getItem(KEY) || 0) < 20 * 3600e3) return; } catch {}
