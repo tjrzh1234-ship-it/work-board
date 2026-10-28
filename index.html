@@ -943,6 +943,14 @@ const SUPABASE_ANON_KEY = 'sb_publishable_WXbAHGbo9QrRDtSO8LmXnA_UiapON2B';
       if (!rows || !rows.length) throw { code: 'invalid_argument', message: 'no permission' };
       col(path).set(id, data); listeners.filter((l) => l.path === path).forEach((l) => l.fire()); if (path === 'tasks') redraw();
     },
+    // 문서 전체를 새 내용으로 바꾸기 (수정 전용, 새로 만들지는 않음)
+    replace: async (v) => {
+      const data = JSON.parse(JSON.stringify(v));
+      const { error, data: rows } = await sb.from('docs').update({ data, updated_at: new Date().toISOString() }).eq('collection', path).eq('id', id).select('id');
+      if (error) throw err(error);
+      if (!rows || !rows.length) throw { code: 'invalid_argument', message: 'no permission' };
+      col(path).set(id, data); listeners.filter((l) => l.path === path).forEach((l) => l.fire()); if (path === 'tasks') redraw();
+    },
     delete: async () => {
       const { error, data: rows } = await sb.from('docs').delete().eq('collection', path).eq('id', id).select('id');
       if (error) throw err(error);
@@ -957,7 +965,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_WXbAHGbo9QrRDtSO8LmXnA_UiapON2B';
     let next = top() + 1, reloaded = false;
     for (let tries = 0; tries < 10; tries++) {
       const id = 'T-' + next;
-      const data = JSON.parse(JSON.stringify({ ...doc, 업무번호: id }));
+      const data = JSON.parse(JSON.stringify({ ...doc, 업무번호: id, by: me ? me.id : '', 작성자: doc['작성자'] || (me ? me.name : '') }));
       const { error } = await sb.from('docs').insert({ collection: 'tasks', id, data, updated_at: new Date().toISOString() });
       if (!error) { col('tasks').set(id, data); listeners.filter((l) => l.path === 'tasks').forEach((l) => l.fire()); redraw(); return id; }
       if (!(error.code === '23505' || /duplicate/i.test(error.message || ''))) throw err(error);
@@ -989,6 +997,14 @@ const SUPABASE_ANON_KEY = 'sb_publishable_WXbAHGbo9QrRDtSO8LmXnA_UiapON2B';
   window.LD_CAN_APPROVE = (author) => canApproveFor(me, author);
   window.LD_APPROVERS_FOR = (author) => Object.values(people).filter((p) => canApproveFor(p, author));
   window.LD_NAME = (id) => (id && people[id] ? people[id].name : '');
+  // 이 업무를 고치거나 지울 수 있는지: 기안자 · 담당자 · 기안자의 결재자 (예전 업무는 담당자 · 결재(전체) · 직원 관리 권한자)
+  window.LD_TASK_EDITOR = (t) => {
+    if (!me || me.status !== 'active' || !t) return false;
+    if (me.name && t['담당자'] === me.name) return true;
+    const by = t.by || '';
+    if (!by) return !!(me.approve_all || me.can_manage);
+    return by === me.id || canApproveFor(me, by);
+  };
   const user = {
     id: async () => (me ? me.id : null),
     canEdit: async () => !!me,
@@ -1216,9 +1232,9 @@ dash.calc('task_list', {
       let tag = '';
       if (diff !== null && t['상태'] !== '완료') tag = diff < 0 ? ` · ${-diff}일 지남` : diff === 0 ? ' · 오늘' : diff <= 3 ? ` · ${diff}일 남음` : '';
       const kd = (v) => (v ? `${+String(v).slice(5, 7)}월 ${+String(v).slice(8, 10)}일` : '없음');
-      if (sales) return { 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '영업보고서', 상태: '영업 보고서', 우선순위: '', 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: '영업 보고서', 내용: String(t['내용'] || ''), 보고서: t['보고서'] || null, 시작일: t['시작일'] || '', 진척원: '', 마감일: '', 마감: '보고 ' + kd(t['시작일']), 남은일수: null, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: 0, 수정: kd(t['수정일']) };
-      if (meet) return { 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '회의록', 상태: '회의록', 우선순위: '', 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: '회의록', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: '', 마감일: '', 마감: '회의 ' + kd(t['시작일']), 남은일수: null, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: 0, 수정: kd(t['수정일']) };
-      return { 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '업무', 상태: t['상태'], 우선순위: t['우선순위'], 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: t['상태'] === '완료' ? '완료' : t['상태'] === '보류' ? '보류' : t['우선순위'] === '긴급' ? '긴급' : '진행', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: t['진척도'], 마감일: d, 마감: md + tag, 남은일수: diff, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: Number(t['진척도']) || 0, 수정: kd(t['수정일']) };
+      if (sales) return { by: t['by'] || '', 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '영업보고서', 상태: '영업 보고서', 우선순위: '', 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: '영업 보고서', 내용: String(t['내용'] || ''), 보고서: t['보고서'] || null, 시작일: t['시작일'] || '', 진척원: '', 마감일: '', 마감: '보고 ' + kd(t['시작일']), 남은일수: null, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: 0, 수정: kd(t['수정일']) };
+      if (meet) return { by: t['by'] || '', 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '회의록', 상태: '회의록', 우선순위: '', 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: '회의록', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: '', 마감일: '', 마감: '회의 ' + kd(t['시작일']), 남은일수: null, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: 0, 수정: kd(t['수정일']) };
+      return { by: t['by'] || '', 업무번호: t['업무번호'], 업무명: t['업무명'], 구분: '업무', 상태: t['상태'], 우선순위: t['우선순위'], 담당자: t['담당자'] || '미지정', 작성자: t['작성자'] || '없음', 표시: t['상태'] === '완료' ? '완료' : t['상태'] === '보류' ? '보류' : t['우선순위'] === '긴급' ? '긴급' : '진행', 내용: String(t['내용'] || ''), 시작일: t['시작일'] || '', 진척원: t['진척도'], 마감일: d, 마감: md + tag, 남은일수: diff, 프로젝트: t['프로젝트'], 시작: kd(t['시작일']), 진척도: Number(t['진척도']) || 0, 수정: kd(t['수정일']) };
     });
   },
 });
@@ -2480,10 +2496,11 @@ window.LD.onApprovals = [];
     };
     $('tf-save').disabled = true; msg('저장하는 중…');
     try {
-      const sid = editId ? (await cap.db.collection('tasks').doc(id).set(doc), id) : await LD_CREATE_TASK(doc);
+      if (old && old['by']) doc.by = old['by'];
+      const sid = editId ? (await cap.db.collection('tasks').doc(id).replace(doc), id) : await LD_CREATE_TASK(doc);
       $('tf-save').disabled = false;
       LD.openTask(sid, [sid]);
-    } catch (e) { $('tf-save').disabled = false; msg('저장하지 못했어요. 잠시 후 다시 해 주세요.'); }
+    } catch (e) { $('tf-save').disabled = false; msg(e && e.code === 'invalid_argument' ? '수정 권한이 없어요. 기안자·담당자·결재자만 고칠 수 있어요.' : '저장하지 못했어요. 잠시 후 다시 해 주세요.'); }
   });
 
   async function saveSales() {
@@ -2504,8 +2521,9 @@ window.LD.onApprovals = [];
       내용: salesText(rep), 보고서: rep,
     };
     $('tf-save').disabled = true; msg('저장하는 중…');
-    try { const sid = editId ? (await cap.db.collection('tasks').doc(id).set(doc), id) : await LD_CREATE_TASK(doc); $('tf-save').disabled = false; LD.openTask(sid, [sid]); }
-    catch (e) { $('tf-save').disabled = false; msg('저장하지 못했어요. 잠시 후 다시 해 주세요.'); }
+    if (old && old['by']) doc.by = old['by'];
+    try { const sid = editId ? (await cap.db.collection('tasks').doc(id).replace(doc), id) : await LD_CREATE_TASK(doc); $('tf-save').disabled = false; LD.openTask(sid, [sid]); }
+    catch (e) { $('tf-save').disabled = false; msg(e && e.code === 'invalid_argument' ? '수정 권한이 없어요. 기안자·담당자·결재자만 고칠 수 있어요.' : '저장하지 못했어요. 잠시 후 다시 해 주세요.'); }
   }
 
   $('tf-del').addEventListener('click', async () => {
@@ -2520,7 +2538,7 @@ window.LD.onApprovals = [];
       try { await LD_SB.from('docs').delete().eq('collection', `tasknotes/${did}/posts`); } catch {}
       editId = null; LD.showTab('all');
     }
-    catch { msg('삭제하지 못했어요.'); }
+    catch { msg('삭제하지 못했어요. 기안자·담당자·결재자만 지울 수 있어요.'); }
   });
 
   // 상세 화면: 업무 내용, 상태 바로 바꾸기, 수정 버튼
@@ -2530,6 +2548,12 @@ window.LD.onApprovals = [];
       const l = document.createElement('div'); l.className = 'lbl'; l.textContent = r['구분'] === '회의록' ? '회의 내용' : '업무 내용';
       const p = document.createElement('p'); p.className = 'dt-body'; p.textContent = r['내용'];
       box.append(l, p);
+    }
+    if (!LD_TASK_EDITOR(r)) {
+      const who0 = (window.LD_NAME && LD_NAME(r.by)) || r['작성자'] || '';
+      const note = document.createElement('div'); note.className = 'lbl';
+      note.textContent = `보기 전용이에요. ${who0 ? '기안자(' + who0 + ')·' : '기안자·'}담당자·결재자만 고칠 수 있어요.`;
+      box.appendChild(note); return box;
     }
     if (r['구분'] === '회의록' || r['구분'] === '영업보고서') {
       const ed0 = document.createElement('button'); ed0.type = 'button'; ed0.className = 'edit-btn'; ed0.textContent = r['구분'] === '회의록' ? '✏️ 회의록 수정' : '✏️ 보고서 수정';
@@ -2548,7 +2572,7 @@ window.LD.onApprovals = [];
         const cap = await LD.cap; if (!cap.db) return;
         const upd = { ...toFields(st, r), 수정일: today() };
         if (st === '완료') upd['진척도'] = '100';
-        try { await cap.db.collection('tasks').doc(r['업무번호']).update(upd); } catch { alert('바꾸지 못했어요.'); }
+        try { await cap.db.collection('tasks').doc(r['업무번호']).update(upd); } catch { alert('바꾸지 못했어요. 기안자·담당자·결재자만 바꿀 수 있어요.'); }
       });
       row.appendChild(b);
     });
